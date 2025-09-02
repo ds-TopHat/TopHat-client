@@ -15,7 +15,7 @@ import {
   solutionStepsRef,
 } from './ChatLogic';
 
-// --- 타입 정의 --- //
+// 타입 정의
 type StepItem = Record<`step ${number}`, string>;
 type AnswerItem = { answer: string };
 type NextStepItem = { next_step: string };
@@ -33,14 +33,14 @@ const Solve = () => {
   const navigate = useNavigate();
   const { mutateAsync: requestSolutionMutate } = usePostAiChat();
 
-  // --- 채팅 스크롤 항상 맨 아래로 --- //
+  // 채팅 스크롤 항상 맨 아래로
   useEffect(() => {
     requestAnimationFrame(() =>
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' }),
     );
   }, [chatList, isLoading]);
 
-  // --- 공용 헬퍼 --- //
+  // 공용 헬퍼
   const addChat = (chat: Chat) => setChatList((prev) => [...prev, chat]);
 
   const addServerMessage = (text: string) => addChat({ from: 'server', text });
@@ -48,7 +48,7 @@ const Solve = () => {
   const handleImageSelect = (url: string) =>
     addChat({ from: 'me', imageUrl: url });
 
-  // --- 분기 처리 로직 --- //
+  // 분기 처리 로직
   const handleSolved = () => {
     addChat({
       from: 'server',
@@ -122,7 +122,7 @@ const Solve = () => {
     }
   };
 
-  // --- 토글 선택 --- //
+  // 토글 선택
   const handleTextSelect = (text: string) => {
     addChat({ from: 'me', text });
 
@@ -145,7 +145,7 @@ const Solve = () => {
     }
   };
 
-  // --- 카메라 모달 선택 --- //
+  // 카메라 모달 선택
   const handleModalSelect = async (option: 'one' | 'two') => {
     setIsOpen(false);
     setChatList([]);

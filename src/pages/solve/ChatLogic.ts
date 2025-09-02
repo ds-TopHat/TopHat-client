@@ -27,7 +27,7 @@ export const processSolutionData = (data: Record<string, string>[]) => {
     .find(([k]) => k === 'answer')?.[1];
 
   if (answer) {
-    steps.push({ key: 'answer', text: answer });
+    steps.push({ key: 'answer', text: `답: ${answer}` });
   }
 
   return steps;

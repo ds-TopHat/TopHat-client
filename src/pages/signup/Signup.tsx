@@ -126,7 +126,7 @@ const Signup = () => {
       { email },
       {
         onSuccess: () => {
-          setCodeSent(true); // 성공 상태를 true로 유지
+          setCodeSent(true);
           setEmailCodeError('');
           alert('인증코드가 전송되었습니다.');
         },
@@ -144,7 +144,7 @@ const Signup = () => {
       { email, code: emailCode },
       {
         onSuccess: () => {
-          setCodeVerified(true); // 인증 성공 상태 유지
+          setCodeVerified(true);
           setEmailCodeError('');
         },
         onError: () => setEmailCodeError('인증코드가 올바르지 않습니다.'),

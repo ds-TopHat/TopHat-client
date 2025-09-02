@@ -17,7 +17,6 @@ export const modal = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '0.8rem',
   backgroundColor: themeVars.color.white000,
   borderRadius: '16px',
   padding: '1.6rem',
@@ -27,6 +26,7 @@ export const modal = style({
 });
 
 export const title = style({
+  margin: '0.8rem 0',
   color: themeVars.color.gray600,
   ...themeVars.font.headlineMedium,
 });
@@ -34,7 +34,7 @@ export const title = style({
 export const buttonGroup = style({
   display: 'flex',
   width: '100%',
-  marginTop: '2rem',
+  marginTop: '1.2rem',
   gap: '1.2rem',
 });
 

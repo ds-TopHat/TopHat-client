@@ -16,7 +16,7 @@ export const useGetMe = () => {
 
 export const useDeleteMe = () => {
   return useMutation<string, AxiosError>({
-    mutationKey: [QUERY_KEYS.DELETE_ME],
+    mutationKey: [QUERY_KEYS.ME],
     mutationFn: deleteMe,
     onSuccess: () => {
       tokenService.removeAccessToken();

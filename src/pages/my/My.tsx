@@ -23,12 +23,14 @@ const My = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data, isLoading } = useGetMe();
-  const { mutate: deleteMe } = useDeleteMe();
+  const { mutateAsync: deleteMe } = useDeleteMe();
 
   const toggleExpand = () => setExpanded((prev) => !prev);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  const handleDelete = async () => await deleteMe();
+  const handleDelete = async () => {
+    await deleteMe();
+  };
 
   const mappedChips = useMemo(() => {
     return (
@@ -105,7 +107,7 @@ const My = () => {
         </div>
       </div>
 
-      {/* chips 영역: units 있을 때만 */}
+      {/* chips 영역 - units 있을 때만 */}
       {hasUnits && (
         <div className={styles.chipSection}>
           <div className={styles.randomChipContainer}>
