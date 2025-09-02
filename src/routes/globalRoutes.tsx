@@ -6,7 +6,6 @@ import {
   ReviewNotesPage,
   SignupPage,
   SolvePage,
-  ErrorPage,
 } from './lazy';
 import { routePath } from './routePath';
 
@@ -22,10 +21,6 @@ export const publicRoutes = [
   {
     path: routePath.HOME,
     Component: HomePage,
-  },
-  {
-    path: routePath.ERROR,
-    Component: ErrorPage,
   },
 ];
 

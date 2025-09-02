@@ -27,14 +27,31 @@ const ReviewNoteDetail = () => {
   const chipData = CHIP_LIST.find((chip) => chip.id === note.unitId);
 
   const answerArray = JSON.parse(note.aiAnswer);
-  const formattedAiAnswer = Array.isArray(answerArray)
-    ? answerArray
-        .map((item) => {
-          const key = Object.keys(item)[0];
-          return item[key];
-        })
-        .join('\n')
-    : '';
+
+  let formattedSteps = '';
+  let formattedAnswer = '';
+
+  if (Array.isArray(answerArray)) {
+    formattedSteps = answerArray
+      .map((item) => {
+        const key = Object.keys(item)[0];
+        if (key === 'answer') {
+          return null;
+        }
+        return item[key];
+      })
+      .filter(Boolean)
+      .join('\n');
+
+    const answerItem = answerArray.find(
+      (item) => Object.keys(item)[0] === 'answer',
+    );
+    if (answerItem) {
+      formattedAnswer = `\n\n답: ${answerItem['answer']}`;
+    }
+  }
+
+  const formattedAiAnswer = formattedSteps + formattedAnswer;
 
   const formattedDate = (() => {
     const date = new Date(note.createdAt);

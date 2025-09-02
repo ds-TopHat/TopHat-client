@@ -7,10 +7,12 @@ interface Props {
   children: ReactNode;
 }
 
-export function GlobalErrorBoundary({ children }: Props) {
+const globalErrorBoundary = ({ children }: Props) => {
   return (
     <ErrorBoundary FallbackComponent={Error}>
       <Suspense fallback={<Loading />}>{children}</Suspense>
     </ErrorBoundary>
   );
-}
+};
+
+export default globalErrorBoundary;

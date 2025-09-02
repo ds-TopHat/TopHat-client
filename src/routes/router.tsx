@@ -1,4 +1,5 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
+import Error from '@pages/error/Error';
 
 import GlobalLayout from './Layout';
 import { routePath } from './routePath';
@@ -17,7 +18,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '*',
-        element: <Navigate to={routePath.ERROR} replace />,
+        element: <Error />,
       },
     ],
   },

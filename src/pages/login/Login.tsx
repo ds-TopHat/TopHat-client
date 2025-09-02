@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Input from '@components/input/Input';
 import Button from '@components/button/Button';
-import { IcKakao } from '@components/icons';
+import { IcBigLogo, IcKakao } from '@components/icons';
 import { useNavigate } from 'react-router-dom';
 import { routePath } from '@routes/routePath';
 import { emailRegex, passwordRegex } from '@utils/validators';
@@ -15,6 +15,8 @@ const Login = () => {
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [loginError, setLoginError] = useState('');
+
   const navigate = useNavigate();
 
   const { mutate: loginMutate } = usePostLogin();
@@ -29,6 +31,9 @@ const Login = () => {
       {
         onSuccess: () => {
           navigate(routePath.HOME);
+        },
+        onError: () => {
+          setLoginError('이메일 또는 비밀번호가 올바르지 않습니다.');
         },
       },
     );
@@ -77,7 +82,7 @@ const Login = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.topBox} />
+      <IcBigLogo width={100} height={76} className={styles.topBox} />
       <div className={styles.formWrapper}>
         <Input
           type="email"
@@ -97,6 +102,7 @@ const Login = () => {
         />
       </div>
       <div className={styles.buttonWrapper}>
+        {loginError && <div className={styles.loginError}>{loginError}</div>}
         <Button isActive={isButtonActive} onClick={handleLogin}>
           로그인
         </Button>

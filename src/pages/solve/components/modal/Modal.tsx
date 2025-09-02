@@ -1,10 +1,10 @@
 import * as styles from './modal.css';
 
-type ModalProps = {
+interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (option: 'one' | 'two') => void;
-};
+}
 
 const Modal = ({ isOpen, onClose, onSelect }: ModalProps) => {
   if (!isOpen) {

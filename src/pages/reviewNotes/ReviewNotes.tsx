@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useInfiniteScroll } from '@hooks/useInfiniteScroll';
 import ReviewCard from '@components/reviewCard/ReviewCard';
 import { routePath } from '@routes/routePath';
-import Loading from '@pages/loading/Loading';
 
 import * as styles from './reviewNotes.css';
 import { useGetReviewNotes, usePostReviewPdf } from './apis/queries';
@@ -16,7 +15,6 @@ const ReviewNotes = () => {
   };
 
   const { data, isLoading } = useGetReviewNotes();
-  // const data = REVIEWNOTES_DATA;
 
   const loadMore = useCallback(() => {
     // 이후 추가
@@ -27,7 +25,7 @@ const ReviewNotes = () => {
   const { mutateAsync: createPdf } = usePostReviewPdf();
 
   if (isLoading) {
-    return <Loading />;
+    return <></>;
   }
 
   const downloadPdf = async () => {

@@ -13,7 +13,7 @@ export const container = style({
 export const title = style({
   margin: '4rem 0 2rem',
   color: themeVars.color.point,
-  ...themeVars.font.bodyMedium,
+  ...themeVars.font.displayMedium,
 });
 
 export const description = style({

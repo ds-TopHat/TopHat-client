@@ -46,6 +46,7 @@ export const noteTitle = style({
 });
 
 export const noteDescription = style({
+  whiteSpace: 'pre-line',
   color: themeVars.color.gray500,
   ...themeVars.font.bodySmall,
 });
@@ -166,5 +167,33 @@ export const expandButton = style({
 
 export const rotated = style({
   transform: 'rotate(180deg)',
-  transition: 'transform 0.3s',
+  transition: 'transform 0.5s',
+});
+
+export const unrotated = style({
+  transform: 'rotate(0deg)',
+  transition: 'transform 0.5s',
+});
+
+export const buttonContainer = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1.6rem',
+  padding: '3.6rem 3.6rem 10rem',
+  maxWidth: '55rem',
+});
+
+export const button = style({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '0.8rem 2rem',
+  height: '5.6rem',
+  width: '100%',
+  color: themeVars.color.gray800,
+  backgroundColor: themeVars.color.white000,
+  borderRadius: '15px',
+  border: `1px solid ${themeVars.color.gray100}`,
+
+  ...themeVars.font.headlineLarge,
 });

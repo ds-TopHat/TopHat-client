@@ -4,7 +4,7 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from '@routes/router';
 import '@styles/index.css';
 import ThemeProvider from '@styles/themeProvider';
-import { GlobalErrorBoundary } from '@routes/globalErrorBoundary';
+import GlobalErrorBoundary from '@routes/globalErrorBoundary';
 
 import queryClient from './queryClient';
 

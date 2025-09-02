@@ -12,7 +12,7 @@ const wrapper = style({
 
 const scrollContainer = style({
   overflowX: 'auto',
-  padding: '2rem 0',
+  padding: '1rem 0 2rem',
 });
 
 const inner = style({

@@ -21,9 +21,6 @@ export const container = style({
 });
 
 export const topBox = style({
-  width: '12rem',
-  height: '12rem',
-  backgroundColor: '#98B6FF',
   marginBottom: '5rem',
 });
 
@@ -34,7 +31,7 @@ export const buttonWrapper = style({
   width: '100%',
   maxWidth: '48rem',
 
-  padding: '0 3.6rem 5rem',
+  padding: '0 3.6rem 2.4rem',
   gap: '1.2rem',
   alignItems: 'center',
   bottom: '0',
@@ -60,8 +57,9 @@ export const kakaoLoginButton = style({
 
 export const signupText = style({
   display: 'flex',
+  alignItems: 'center',
   color: themeVars.color.gray500,
-  ...themeVars.font.bodySmall,
+  ...themeVars.font.labelLarge,
 });
 
 export const signupButton = style({
@@ -70,4 +68,11 @@ export const signupButton = style({
   backgroundColor: 'transparent',
   border: 'none',
   cursor: 'pointer',
+});
+
+export const loginError = style({
+  textAlign: 'left',
+  alignSelf: 'flex-start',
+  color: '#F73E3E',
+  ...themeVars.font.labelLarge,
 });

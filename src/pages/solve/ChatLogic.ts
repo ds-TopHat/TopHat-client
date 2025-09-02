@@ -2,10 +2,15 @@ import type { Dispatch, SetStateAction } from 'react';
 
 import type { Chat } from './ChatManager';
 
-export const solutionStepsRef: { current: string[] } = { current: [] };
+export interface Step {
+  key: string;
+  text: string;
+}
 
+export const solutionStepsRef: { current: Step[] } = { current: [] };
+
+// 서버 데이터 → Step 배열로 변환
 export const processSolutionData = (data: Record<string, string>[]) => {
-  // stepN 키를 전부 모아서 N 기준으로 정렬
   const stepEntries = data
     .flatMap((item) => Object.entries(item))
     .filter(([k]) => k.startsWith('step')) as [string, string][];
@@ -15,18 +20,20 @@ export const processSolutionData = (data: Record<string, string>[]) => {
     return num(a[0]) - num(b[0]);
   });
 
-  const steps = stepEntries.map(([, v]) => v);
+  const steps: Step[] = stepEntries.map(([k, v]) => ({ key: k, text: v }));
 
-  // answer가 있으면 마지막에 추가
   const answer = data
     .flatMap((item) => Object.entries(item))
     .find(([k]) => k === 'answer')?.[1];
+
   if (answer) {
-    steps.push(answer as string);
+    steps.push({ key: 'answer', text: `답: ${answer}` });
   }
+
   return steps;
 };
 
+// 단일 단계 출력
 export const showStep = (
   index: number,
   setChatList: Dispatch<SetStateAction<Chat[]>>,
@@ -48,6 +55,28 @@ export const showStep = (
 
   setChatList((prev) => [
     ...prev,
-    { from: 'server', text: steps[index], buttons },
+    { from: 'server', text: steps[index].text, buttons },
   ]);
+};
+
+// next_step부터 시작
+export const showStepsFromNext = (
+  nextStepKey: string,
+  setChatList: Dispatch<SetStateAction<Chat[]>>,
+) => {
+  const steps = solutionStepsRef.current;
+  if (!steps.length) {
+    return;
+  }
+
+  const stepIndex = steps.findIndex(
+    (s) =>
+      s.key.replace(/\s/g, '').toLowerCase() ===
+      nextStepKey.replace(/\s/g, '').toLowerCase(),
+  );
+
+  const startIndex = stepIndex >= 0 ? stepIndex : 0;
+
+  // startIndex 단계만 보여주고 다음 버튼으로 이어짐
+  showStep(startIndex, setChatList);
 };

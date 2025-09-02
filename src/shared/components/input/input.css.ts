@@ -1,19 +1,37 @@
 import { themeVars } from '@styles/theme.css';
 import { style, styleVariants } from '@vanilla-extract/css';
 
+export const inputWrapper = style({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+export const inputInner = style({
+  position: 'relative',
+  width: '100%',
+});
+
 export const baseInput = style({
   width: '100%',
-  display: 'flex',
-  height: '5.6rem',
+  height: '5rem',
   padding: '0.8rem 2rem',
-  alignItems: 'center',
-  gap: '0.8rem',
-  alignSelf: 'stretch',
   borderRadius: '15px',
   outline: 'none',
   background: themeVars.color.white000,
   boxSizing: 'border-box',
-  ...themeVars.font.bodySmall,
+  display: 'flex',
+  alignItems: 'center',
+  ...themeVars.font.labelLarge,
+});
+
+export const rightButtonWrapper = style({
+  position: 'absolute',
+  right: '0.8rem',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 });
 
 export const inputVariants = styleVariants({
@@ -58,8 +76,8 @@ export const inputVariants = styleVariants({
 });
 
 export const errorMessage = style({
-  margin: '0 0 0 0.4rem',
+  margin: '0.4rem 0 0 0.4rem',
   minHeight: '2.4rem',
   color: '#F73E3E',
-  ...themeVars.font.labelLarge,
+  ...themeVars.font.labelSmall,
 });

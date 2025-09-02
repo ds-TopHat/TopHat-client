@@ -5,6 +5,7 @@ import { deleteMe, getMe } from './axios';
 import type { MeResponseTypes } from '../types/api';
 
 import { QUERY_KEYS } from '@/shared/constants/queryKey';
+import { tokenService } from '@/shared/auth/services/tokenService';
 
 export const useGetMe = () => {
   return useQuery<MeResponseTypes, AxiosError>({
@@ -15,7 +16,11 @@ export const useGetMe = () => {
 
 export const useDeleteMe = () => {
   return useMutation<string, AxiosError>({
-    mutationKey: [QUERY_KEYS.DELETE_ME],
+    mutationKey: [QUERY_KEYS.ME],
     mutationFn: deleteMe,
+    onSuccess: () => {
+      tokenService.removeAccessToken();
+      tokenService.removeRefreshToken();
+    },
   });
 };
