@@ -48,3 +48,10 @@ export const textContainer = style({
   color: themeVars.color.gray600,
   ...themeVars.font.headlineLarge,
 });
+
+export const checkIcon = style({
+  position: 'absolute',
+  top: '1rem',
+  right: '1rem',
+  zIndex: themeVars.zIndex.two,
+});
