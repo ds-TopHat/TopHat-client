@@ -12,7 +12,6 @@ export const cardContainer = style({
   border: `1px solid ${themeVars.color.gray200}`,
   borderRadius: '8px',
   overflow: 'hidden',
-  transition: 'all 0.3s ease',
   cursor: 'pointer',
 });
 
@@ -23,7 +22,6 @@ export const cardSelected = style({
 export const overlay = style({
   position: 'absolute',
   inset: 0,
-  transition: 'background-color 0.3s ease',
   pointerEvents: 'none',
 });
 
@@ -47,4 +45,11 @@ export const textContainer = style({
   backgroundColor: 'rgba(255, 255, 255, 0.8)',
   color: themeVars.color.gray600,
   ...themeVars.font.headlineLarge,
+});
+
+export const checkIcon = style({
+  position: 'absolute',
+  top: '1rem',
+  right: '1rem',
+  zIndex: themeVars.zIndex.two,
 });

@@ -1,4 +1,5 @@
 export { default as IcBigLogo } from './IcBigLogo';
+export { default as IcBlueCheck } from './IcBlueCheck';
 export { default as IcChipAlpha } from './IcChipAlpha';
 export { default as IcChipBar } from './IcChipBar';
 export { default as IcChipLine } from './IcChipLine';
@@ -7,6 +8,7 @@ export { default as IcChipShape } from './IcChipShape';
 export { default as IcDownArrow } from './IcDownArrow';
 export { default as IcExtract } from './IcExtract';
 export { default as IcFloatingSolve } from './IcFloatingSolve';
+export { default as IcGrayCheck } from './IcGrayCheck';
 export { default as IcHomeTextLogo } from './IcHomeTextLogo';
 export { default as IcKakao } from './IcKakao';
 export { default as IcMainAdd } from './IcMainAdd';

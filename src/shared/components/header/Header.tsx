@@ -1,5 +1,5 @@
 import { IcHomeTextLogo, IcMypage, IcTextLogo } from '@components/icons';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { routePath } from '@routes/routePath';
 import { themeVars } from '@styles/theme.css';
 
@@ -11,9 +11,11 @@ interface HeaderProps {
 
 const Header = ({ isHome = false }: HeaderProps) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const goHome = () => navigate(routePath.HOME);
   const goMyPage = () => navigate(routePath.MY);
+  const isMyPage = pathname === routePath.MY;
 
   return (
     <div className={styles.headerWrapper}>
@@ -24,12 +26,14 @@ const Header = ({ isHome = false }: HeaderProps) => {
           <IcTextLogo width={96} height={36} color={themeVars.color.white000} />
         )}
       </button>
-      <button type="button" aria-label="마이페이지로 이동" onClick={goMyPage}>
-        <IcMypage
-          width={24}
-          color={isHome ? '#C9DFFF' : themeVars.color.point}
-        />
-      </button>
+      {!isMyPage && (
+        <button type="button" aria-label="마이페이지로 이동" onClick={goMyPage}>
+          <IcMypage
+            width={24}
+            color={isHome ? '#C9DFFF' : themeVars.color.point}
+          />
+        </button>
+      )}
     </div>
   );
 };

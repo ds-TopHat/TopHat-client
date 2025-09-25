@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { IcExtract } from '@components/icons';
 import { useNavigate } from 'react-router-dom';
 import { useInfiniteScroll } from '@hooks/useInfiniteScroll';
@@ -23,17 +23,29 @@ const ReviewNotes = () => {
   const loaderRef = useInfiniteScroll(loadMore);
 
   const { mutateAsync: createPdf } = usePostReviewPdf();
+  const [selectedCards, setSelectedCards] = useState<number[]>([]);
+
+  const toggleSelectCard = (id: number) => {
+    setSelectedCards((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+  };
 
   if (isLoading) {
     return <></>;
   }
 
   const downloadPdf = async () => {
-    if (!data) {
+    if (!data || selectedCards.length === 0) {
       return;
     }
 
-    const problemImageUrls = data.map((item) => item.problemImageUrl);
+    // 선택된 카드만 problemImageUrl 배열로 만들기
+    const problemImageUrls = data
+      .filter((item) => selectedCards.includes(item.questionId))
+      .map((item) => item.problemImageUrl);
+
+    // PDF 생성
     const blob = await createPdf({ problemImageUrls });
 
     const url = window.URL.createObjectURL(blob);
@@ -72,7 +84,9 @@ const ReviewNotes = () => {
             key={card.questionId}
             imageSrc={card.problemImageUrl}
             text={card.unitType}
-            onClick={() => handleClick(card.questionId)}
+            selected={selectedCards.includes(card.questionId)}
+            onClick={() => toggleSelectCard(card.questionId)}
+            onCardClick={() => handleClick(card.questionId)}
           />
         ))}
       </div>
