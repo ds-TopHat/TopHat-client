@@ -1,5 +1,5 @@
 import { IcHomeTextLogo, IcMypage, IcTextLogo } from '@components/icons';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { routePath } from '@routes/routePath';
 import { themeVars } from '@styles/theme.css';
 
@@ -11,10 +11,11 @@ interface HeaderProps {
 
 const Header = ({ isHome = false }: HeaderProps) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const goHome = () => navigate(routePath.HOME);
   const goMyPage = () => navigate(routePath.MY);
-  const isMyPage = location.pathname === routePath.MY;
+  const isMyPage = pathname === routePath.MY;
 
   return (
     <div className={styles.headerWrapper}>
