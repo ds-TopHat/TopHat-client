@@ -7,9 +7,13 @@ export interface Step {
   text: string;
 }
 
-export const solutionStepsRef: { current: Step[] } = { current: [] };
+// 단계 배열 + 현재 진행 인덱스 저장
+export const solutionStepsRef: { current: Step[]; index: number } = {
+  current: [],
+  index: 0,
+};
 
-// 서버 데이터 → Step 배열로 변환
+// 서버 데이터를 Step 배열로 변환
 export const processSolutionData = (data: Record<string, string>[]) => {
   const stepEntries = data
     .flatMap((item) => Object.entries(item))
@@ -30,53 +34,35 @@ export const processSolutionData = (data: Record<string, string>[]) => {
     steps.push({ key: 'answer', text: `답: ${answer}` });
   }
 
+  // AI가 next_step 정보를 줄 경우, 시작 인덱스 설정
+  const nextStepEntry = data.find((item) => 'next_step' in item) as
+    | { next_step: string }
+    | undefined;
+
+  if (nextStepEntry?.next_step) {
+    const nextIdx = steps.findIndex((s) => s.key === nextStepEntry.next_step);
+    solutionStepsRef.index = nextIdx >= 0 ? nextIdx : 0;
+  } else {
+    solutionStepsRef.index = 0; // 기본 0부터 시작
+  }
+
   return steps;
 };
 
-// 단일 단계 출력
-export const showStep = (
-  index: number,
+// 다음 단계만 출력
+export const showNextStep = (
   setChatList: Dispatch<SetStateAction<Chat[]>>,
-) => {
+): boolean => {
   const steps = solutionStepsRef.current;
-  if (index < 0 || index >= steps.length) {
-    return;
+  const idx = solutionStepsRef.index;
+
+  if (!steps.length || idx >= steps.length) {
+    return true;
   }
 
-  const buttons =
-    index < steps.length - 1
-      ? [
-          {
-            label: '다음 풀이',
-            onClick: () => showStep(index + 1, setChatList),
-          },
-        ]
-      : [];
+  setChatList((prev) => [...prev, { from: 'server', text: steps[idx].text }]);
+  solutionStepsRef.index += 1;
 
-  setChatList((prev) => [
-    ...prev,
-    { from: 'server', text: steps[index].text, buttons },
-  ]);
-};
-
-// next_step부터 시작
-export const showStepsFromNext = (
-  nextStepKey: string,
-  setChatList: Dispatch<SetStateAction<Chat[]>>,
-) => {
-  const steps = solutionStepsRef.current;
-  if (!steps.length) {
-    return;
-  }
-
-  const stepIndex = steps.findIndex(
-    (s) =>
-      s.key.replace(/\s/g, '').toLowerCase() ===
-      nextStepKey.replace(/\s/g, '').toLowerCase(),
-  );
-
-  const startIndex = stepIndex >= 0 ? stepIndex : 0;
-
-  // startIndex 단계만 보여주고 다음 버튼으로 이어짐
-  showStep(startIndex, setChatList);
+  // 마지막 단계 도달 시 true
+  return solutionStepsRef.index >= steps.length;
 };

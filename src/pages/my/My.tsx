@@ -22,7 +22,7 @@ const My = () => {
   const [expanded, setExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data, isLoading } = useGetMe();
+  const { data, isPending } = useGetMe();
   const { mutateAsync: deleteMe } = useDeleteMe();
 
   const toggleExpand = () => setExpanded((prev) => !prev);
@@ -47,7 +47,7 @@ const My = () => {
     );
   }, [data?.unitsList]);
 
-  if (isLoading) {
+  if (isPending) {
     return null;
   }
 

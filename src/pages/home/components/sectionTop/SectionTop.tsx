@@ -87,7 +87,11 @@ const SectionTop = () => {
             paddingRight: '3rem',
           }}
         >
-          <IcMainGroup width={425.5} height={426} />
+          <IcMainGroup
+            width={425.5}
+            height={426}
+            style={{ willChange: 'opacity' }}
+          />
         </motion.div>
 
         {/* Chat 1 */}
@@ -98,10 +102,13 @@ const SectionTop = () => {
             top: '18rem',
             paddingLeft: '3rem',
             width: '100%',
-            willChange: 'opacity',
           }}
         >
-          <IcMainChat1 width={168} height={68} />
+          <IcMainChat1
+            width={168}
+            height={68}
+            style={{ willChange: 'opacity' }}
+          />
         </motion.div>
 
         {/* Chat 2 */}
@@ -112,10 +119,13 @@ const SectionTop = () => {
             top: `calc(18rem + 1.8rem + 6rem)`,
             paddingLeft: '3rem',
             width: '100%',
-            willChange: 'opacity',
           }}
         >
-          <IcMainChat2 width={168} height={164} />
+          <IcMainChat2
+            width={168}
+            height={164}
+            style={{ willChange: 'opacity' }}
+          />
         </motion.div>
 
         {/* Chat 3 */}
@@ -126,10 +136,13 @@ const SectionTop = () => {
             top: `calc(18rem + 3.6rem + 21.8rem)`,
             paddingLeft: '3rem',
             width: '100%',
-            willChange: 'opacity',
           }}
         >
-          <IcMainChat3 width={223} height={144} />
+          <IcMainChat3
+            width={223}
+            height={144}
+            style={{ willChange: 'opacity' }}
+          />
         </motion.div>
       </motion.div>
     </div>

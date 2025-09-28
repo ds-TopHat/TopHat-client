@@ -6,7 +6,7 @@ const wrapper = style({
   minHeight: '100vh',
   height: '100%',
   paddingTop: '7.95rem',
-  paddingBottom: '10rem',
+  paddingBottom: '8.95rem',
   backgroundColor: themeVars.color.gray100,
 });
 
@@ -22,7 +22,7 @@ const chatContainer = style({
 
 const chatBubbleLeft = style({
   alignSelf: 'flex-start',
-  maxWidth: '33rem',
+  maxWidth: '32rem',
   padding: '1rem',
   borderRadius: '1.2rem',
   backgroundColor: themeVars.color.white000,
@@ -31,7 +31,7 @@ const chatBubbleLeft = style({
 
 const chatBubbleRight = style({
   alignSelf: 'flex-end',
-  maxWidth: '33rem',
+  maxWidth: '32rem',
   padding: '1rem',
   borderRadius: '12px',
   background: themeVars.color.point,
@@ -86,8 +86,8 @@ export {
 };
 
 const bounce = keyframes({
-  '0%, 80%, 100%': { transform: 'translateY(0px)' },
-  '40%': { transform: 'translateY(-2px)' },
+  '0%, 100%': { transform: 'translateY(1px)' },
+  '50%': { transform: 'translateY(-2px)' },
 });
 
 export const dots = style({
@@ -97,8 +97,8 @@ export const dots = style({
 });
 
 export const dot = style({
-  width: '0.8rem',
-  height: '0.8rem',
+  width: '0.7rem',
+  height: '0.7rem',
   borderRadius: '50%',
   backgroundColor: themeVars.color.point,
   animation: `${bounce} 1.2s infinite ease-in-out both`,

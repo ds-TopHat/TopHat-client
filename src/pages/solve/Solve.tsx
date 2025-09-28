@@ -1,6 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { routePath } from '@routes/routePath';
 import { uploadToPresignedUrl } from '@apis/upload';
 
 import * as styles from './solve.css';
@@ -11,11 +9,11 @@ import { getPresignedUrl } from './apis/axios';
 import { usePostAiChat } from './apis/queries';
 import {
   processSolutionData,
-  showStepsFromNext,
+  showNextStep,
   solutionStepsRef,
 } from './ChatLogic';
 
-// 타입 정의
+// 타입
 type StepItem = Record<`step ${number}`, string>;
 type AnswerItem = { answer: string };
 type NextStepItem = { next_step: string };
@@ -27,10 +25,9 @@ const Solve = () => {
   const [imageUploaded, setImageUploaded] = useState(false);
   const [downloadUrls, setDownloadUrls] = useState<string[]>([]);
   const [s3Key, setS3Key] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
   const { mutateAsync: requestSolutionMutate } = usePostAiChat();
 
   // 채팅 스크롤 항상 맨 아래로
@@ -38,91 +35,22 @@ const Solve = () => {
     requestAnimationFrame(() =>
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' }),
     );
-  }, [chatList, isLoading]);
+  }, [chatList, isPending]);
 
-  // 공용 헬퍼
   const addChat = (chat: Chat) => setChatList((prev) => [...prev, chat]);
-
   const addServerMessage = (text: string) => addChat({ from: 'server', text });
-
   const handleImageSelect = (url: string) =>
     addChat({ from: 'me', imageUrl: url });
 
-  // 분기 처리 로직
-  const handleSolved = () => {
-    addChat({
-      from: 'server',
-      text: '🎉 문제 해결을 축하합니다!',
-      buttons: [
-        { label: '메인', onClick: () => navigate(routePath.HOME) },
-        { label: '마이페이지', onClick: () => navigate(routePath.MY) },
-      ],
-    });
-  };
+  // 토글 상태
+  const [toggleItems, setToggleItems] = useState([
+    '단계별 풀이를 알려줘',
+    '전체 풀이를 알려줘',
+    '해결했어요!',
+  ]);
 
-  const handleFullSolution = async () => {
-    if (isLoading) {
-      return;
-    }
-    setIsLoading(true);
-
-    try {
-      if (!solutionStepsRef.current.length) {
-        const solutionData: AIResponse = await requestSolutionMutate({
-          downloadUrls,
-          s3Key,
-        });
-        solutionStepsRef.current = processSolutionData(solutionData);
-      }
-
-      addChat({
-        from: 'server',
-        text: solutionStepsRef.current.map((s) => s.text).join('\n\n'),
-      });
-    } catch {
-      addServerMessage(
-        '풀이 요청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleStepByStep = async () => {
-    if (isLoading) {
-      return;
-    }
-    setIsLoading(true);
-
-    try {
-      let nextStepKey = 'step 1';
-
-      if (!solutionStepsRef.current.length) {
-        const solutionData: AIResponse = await requestSolutionMutate({
-          downloadUrls,
-          s3Key,
-        });
-
-        solutionStepsRef.current = processSolutionData(solutionData);
-
-        // next_step 가져오기
-        const nextStepObj = solutionData.find(
-          (item): item is NextStepItem => 'next_step' in item,
-        );
-        nextStepKey = nextStepObj?.next_step || 'step 1';
-      }
-
-      showStepsFromNext(nextStepKey, setChatList);
-    } catch {
-      addServerMessage(
-        '풀이 요청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // 토글 선택
+  // 토글 클릭 핸들러
+  // 토글 클릭 핸들러
   const handleTextSelect = (text: string) => {
     addChat({ from: 'me', text });
 
@@ -130,18 +58,123 @@ const Solve = () => {
       text !== '해결했어요!' &&
       (!imageUploaded || !s3Key || !downloadUrls.length)
     ) {
-      return addServerMessage('문제 이미지를 업로드 해주세요!');
+      return addServerMessage('문제 이미지를 먼저 업로드 해주세요!');
     }
 
     switch (text) {
-      case '해결했어요!':
-        return handleSolved();
-      case '전체 풀이를 알려줘':
-        return handleFullSolution();
       case '단계별 풀이를 알려줘':
-        return handleStepByStep();
-      default:
-        return addServerMessage('요청을 이해하지 못했습니다.');
+        fetchSolutionThenStepByStep();
+        setToggleItems([
+          '다음 풀이를 알려줘',
+          '전체 풀이를 알려줘',
+          '해결했어요!',
+        ]);
+        return;
+      case '다음 풀이를 알려줘':
+        handleStepByStep();
+        return;
+      case '전체 풀이를 알려줘':
+        handleFullSolution();
+        return;
+      case '해결했어요!':
+        handleSolved();
+        return;
+    }
+  };
+
+  // API 호출 후 첫 단계 보여주기
+  const fetchSolutionThenStepByStep = async () => {
+    if (isPending) {
+      return;
+    }
+    setIsPending(true);
+
+    try {
+      const solutionData: AIResponse = await requestSolutionMutate({
+        downloadUrls,
+        s3Key,
+      });
+      solutionStepsRef.current = processSolutionData(solutionData);
+
+      // 첫 단계 보여주기
+      showNextStep(setChatList);
+    } catch {
+      addServerMessage(
+        '풀이 요청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
+      );
+      // 토글 초기화
+      setToggleItems([
+        '단계별 풀이를 알려줘',
+        '전체 풀이를 알려줘',
+        '해결했어요!',
+      ]);
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  // 다음 단계 보여주기 (API 호출 없이)
+  const handleStepByStep = () => {
+    const finished = showNextStep(setChatList);
+
+    if (finished) {
+      addChat({ from: 'server', text: '풀이를 모두 확인했습니다!' });
+      setTimeout(() => {
+        addChat({
+          from: 'server',
+          text: '새로운 문제를 질문하려면 카메라를 눌러주세요.',
+        });
+      }, 1000);
+
+      // 마지막 단계 후 토글 초기화
+      setToggleItems([
+        '단계별 풀이를 알려줘',
+        '전체 풀이를 알려줘',
+        '해결했어요!',
+      ]);
+    }
+  };
+  const handleSolved = () => {
+    addChat({ from: 'server', text: '문제 해결을 축하합니다!' });
+    setTimeout(() => {
+      addChat({
+        from: 'server',
+        text: '새로운 문제를 질문하려면 카메라를 눌러주세요.',
+      });
+    }, 1000);
+  };
+
+  // 전체 풀이
+  const handleFullSolution = async () => {
+    if (isPending) {
+      return;
+    }
+    setIsPending(true);
+
+    try {
+      const solutionData: AIResponse = await requestSolutionMutate({
+        downloadUrls,
+        s3Key,
+      });
+      solutionStepsRef.current = processSolutionData(solutionData);
+
+      addChat({
+        from: 'server',
+        text: solutionStepsRef.current.map((s) => s.text).join('\n\n'),
+      });
+
+      // 토글 그대로 유지
+      setToggleItems([
+        '단계별 풀이를 알려줘',
+        '전체 풀이를 알려줘',
+        '해결했어요!',
+      ]);
+    } catch {
+      addServerMessage(
+        '풀이 요청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
+      );
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -153,6 +186,11 @@ const Solve = () => {
     setImageUploaded(false);
     setS3Key('');
     setDownloadUrls([]);
+    setToggleItems([
+      '단계별 풀이를 알려줘',
+      '전체 풀이를 알려줘',
+      '해결했어요!',
+    ]);
 
     const count = option === 'one' ? 1 : 2;
     try {
@@ -176,8 +214,8 @@ const Solve = () => {
       if (!files || files.length < count) {
         return addServerMessage(
           count > 1
-            ? '이미지 2장을 선택해주세요.'
-            : '이미지 1장을 선택해주세요.',
+            ? '문제 이미지 1장, 풀이 이미지 1장을 선택해주세요.'
+            : '문제 이미지 1장을 선택해주세요.',
         );
       }
 
@@ -209,7 +247,7 @@ const Solve = () => {
           <ChatManager key={idx} chat={chat} />
         ))}
 
-        {isLoading && (
+        {isPending && (
           <div className={styles.chatBubbleLeft}>
             <div className={styles.chatServerText}>
               <div className={styles.dots}>
@@ -225,8 +263,10 @@ const Solve = () => {
       </div>
 
       <Toggle
+        items={toggleItems}
         onTextSelect={handleTextSelect}
         onCameraClick={() => setIsOpen(true)}
+        disabled={isPending}
       />
       <Modal
         isOpen={isOpen}
