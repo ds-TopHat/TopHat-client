@@ -53,6 +53,7 @@ const SectionBottom = () => {
         style={{
           y: translateYIn,
           opacity: combinedOpacity,
+          willChange: 'opacity',
         }}
         className={styles.sectionContent}
       >
