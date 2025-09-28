@@ -8,8 +8,11 @@ interface ModalProps {
 
 const Modal = ({ isOpen, onClose, onSelect }: ModalProps) => {
   if (!isOpen) {
+    document.body.style.overflow = '';
     return null;
   }
+
+  document.body.style.overflow = 'hidden';
 
   return (
     <div className={styles.backdrop} onClick={onClose}>

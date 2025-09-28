@@ -17,7 +17,7 @@ export const modal = style({
   backgroundColor: themeVars.color.white000,
   borderRadius: '16px',
   padding: '2.4rem',
-  width: '90%',
+  width: '80%',
   maxWidth: '400px',
   boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
 });
@@ -26,7 +26,7 @@ export const title = style({
   marginBottom: '2rem',
   textAlign: 'center',
   color: themeVars.color.gray700,
-  ...themeVars.font.displaySmall,
+  ...themeVars.font.headlineLarge,
 });
 
 export const buttonContainer = style({
@@ -42,5 +42,5 @@ export const button = style({
   background: themeVars.color.point,
   color: themeVars.color.white000,
   cursor: 'pointer',
-  ...themeVars.font.headlineLarge,
+  ...themeVars.font.headlineMedium,
 });
