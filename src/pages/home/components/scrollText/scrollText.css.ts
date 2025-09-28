@@ -17,7 +17,7 @@ export const wrapper = style({
   flexDirection: 'column',
   gap: '0.8rem',
 
-  paddingTop: '19.2rem',
+  paddingTop: '16rem',
   margin: '0 auto',
   paddingLeft: '3.2rem',
 

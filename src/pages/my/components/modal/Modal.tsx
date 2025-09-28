@@ -16,8 +16,11 @@ const Modal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
   const navigate = useNavigate();
 
   if (!isOpen) {
+    document.body.style.overflow = '';
     return null;
   }
+
+  document.body.style.overflow = 'hidden';
 
   const handleDelete = async () => {
     await onConfirm();

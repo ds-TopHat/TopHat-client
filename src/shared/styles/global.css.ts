@@ -30,6 +30,7 @@ globalStyle('html, body', {
   scrollBehavior: 'smooth',
   backgroundColor: themeVars.color.gray200,
   boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+  overscrollBehavior: 'none',
 });
 
 // A 태그 스타일

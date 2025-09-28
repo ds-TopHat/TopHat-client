@@ -4,7 +4,7 @@ import { style } from '@vanilla-extract/css';
 const sectionBottomWrapper = style({
   position: 'relative',
   width: '100%',
-  height: '108.8rem',
+  height: '88.8rem',
   background: 'linear-gradient(180deg, #82acff 0%, #D7ECFF 85%)',
   overflow: 'hidden',
 });
@@ -50,7 +50,7 @@ const mainButton = style({
 
 const sectionContent = style({
   position: 'relative',
-  top: '40%',
+  top: '30%',
   left: 0,
   width: '100%',
   display: 'flex',
@@ -64,6 +64,7 @@ const iconWrapper = style({
   gap: '1rem',
   marginBottom: '2rem',
 });
+
 export {
   sectionBottomWrapper,
   iconContainer,
