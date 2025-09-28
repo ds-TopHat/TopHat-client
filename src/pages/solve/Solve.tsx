@@ -65,12 +65,12 @@ const Solve = () => {
       case '단계별 풀이를 알려줘':
         fetchSolutionThenStepByStep();
         setToggleItems([
-          '다음 풀이를 보여줘',
+          '다음 풀이를 알려줘',
           '전체 풀이를 알려줘',
           '해결했어요!',
         ]);
         return;
-      case '다음 풀이를 보여줘':
+      case '다음 풀이를 알려줘':
         handleStepByStep();
         return;
       case '전체 풀이를 알려줘':

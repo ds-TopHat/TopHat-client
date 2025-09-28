@@ -34,8 +34,18 @@ export const processSolutionData = (data: Record<string, string>[]) => {
     steps.push({ key: 'answer', text: `답: ${answer}` });
   }
 
-  // 새 데이터 들어오면 인덱스 초기화
-  solutionStepsRef.index = 0;
+  // AI가 next_step 정보를 줄 경우, 시작 인덱스 설정
+  const nextStepEntry = data.find((item) => 'next_step' in item) as
+    | { next_step: string }
+    | undefined;
+
+  if (nextStepEntry?.next_step) {
+    const nextIdx = steps.findIndex((s) => s.key === nextStepEntry.next_step);
+    solutionStepsRef.index = nextIdx >= 0 ? nextIdx : 0;
+  } else {
+    solutionStepsRef.index = 0; // 기본 0부터 시작
+  }
+
   return steps;
 };
 
