@@ -2,7 +2,7 @@ import { themeVars } from '@styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
 export const container = style({
-  paddingTop: '10.8rem',
+  paddingTop: '7.95rem',
 
   height: '100%',
   background: 'linear-gradient(355deg, #FFF 48.23%, #BFD9FE 97.05%), #FFF',
