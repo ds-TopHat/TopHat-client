@@ -16,7 +16,7 @@ const ScrollText = () => {
 
   const opacityLine3 = useTransform(scrollY, [0, 0], [0.3, 0.3]);
 
-  const gradientOpacity = useTransform(scrollY, [1900, 2100], [0, 1]);
+  const gradientOpacity = useTransform(scrollY, [2000, 2200], [0, 1]);
   const inverseGradientOpacity = useTransform(gradientOpacity, (v) => 1 - v);
 
   const combinedOpacityLine2 = useTransform(
