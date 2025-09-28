@@ -3,7 +3,7 @@ import * as styles from '@pages/home/components/scrollText/scrollText.css';
 
 const ScrollText = () => {
   const { scrollY } = useScroll();
-  const BREAKPOINT = 2520;
+  const BREAKPOINT = 2440;
 
   const positionY = useTransform(scrollY, (y) =>
     y < BREAKPOINT ? 'fixed' : 'absolute',
@@ -16,7 +16,7 @@ const ScrollText = () => {
 
   const opacityLine3 = useTransform(scrollY, [0, 0], [0.3, 0.3]);
 
-  const gradientOpacity = useTransform(scrollY, [2100, 2300], [0, 1]);
+  const gradientOpacity = useTransform(scrollY, [1900, 2100], [0, 1]);
   const inverseGradientOpacity = useTransform(gradientOpacity, (v) => 1 - v);
 
   const combinedOpacityLine2 = useTransform(
