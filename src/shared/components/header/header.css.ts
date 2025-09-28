@@ -10,5 +10,6 @@ export const headerWrapper = style({
   top: 0,
   width: '100%',
   backdropFilter: 'blur(5px)',
+  WebkitBackdropFilter: 'blur(5px)',
   zIndex: themeVars.zIndex.five,
 });
