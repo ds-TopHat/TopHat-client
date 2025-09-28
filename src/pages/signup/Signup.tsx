@@ -130,7 +130,8 @@ const Signup = () => {
           setEmailCodeError('');
           alert('인증코드가 전송되었습니다.');
         },
-        onError: () => setEmailError('인증코드 전송 실패. 다시 시도해주세요.'),
+        onError: () =>
+          setEmailError('인증코드 전송에 실패했습니다. 다시 시도해주세요.'),
       },
     );
   };
