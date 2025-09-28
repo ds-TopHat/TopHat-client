@@ -86,8 +86,8 @@ export {
 };
 
 const bounce = keyframes({
-  '0%, 80%, 100%': { transform: 'translateY(0px)' },
-  '40%': { transform: 'translateY(-2px)' },
+  '0%, 100%': { transform: 'translateY(1px)' },
+  '50%': { transform: 'translateY(-2px)' },
 });
 
 export const dots = style({
@@ -97,8 +97,8 @@ export const dots = style({
 });
 
 export const dot = style({
-  width: '0.8rem',
-  height: '0.8rem',
+  width: '0.7rem',
+  height: '0.7rem',
   borderRadius: '50%',
   backgroundColor: themeVars.color.point,
   animation: `${bounce} 1.2s infinite ease-in-out both`,

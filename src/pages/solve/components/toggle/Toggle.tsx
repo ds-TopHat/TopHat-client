@@ -2,8 +2,8 @@ import { IcToggleCamera } from '@components/icons';
 import * as styles from '@pages/solve/components/toggle/toggle.css';
 
 const TOGGLE_ITEMS = [
-  '전체 풀이를 알려줘',
   '단계별 풀이를 알려줘',
+  '전체 풀이를 알려줘',
   '해결했어요!',
 ];
 

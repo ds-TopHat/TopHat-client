@@ -136,10 +136,10 @@ const Solve = () => {
     switch (text) {
       case '해결했어요!':
         return handleSolved();
-      case '전체 풀이를 알려줘':
-        return handleFullSolution();
       case '단계별 풀이를 알려줘':
         return handleStepByStep();
+      case '전체 풀이를 알려줘':
+        return handleFullSolution();
       default:
         return addServerMessage('요청을 이해하지 못했습니다.');
     }
@@ -176,8 +176,8 @@ const Solve = () => {
       if (!files || files.length < count) {
         return addServerMessage(
           count > 1
-            ? '이미지 2장을 선택해주세요.'
-            : '이미지 1장을 선택해주세요.',
+            ? '문제 이미지와 풀이 이미지 총 2장을 선택해주세요.'
+            : '문제 이미지 1장을 선택해주세요.',
         );
       }
 

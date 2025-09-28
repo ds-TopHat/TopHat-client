@@ -16,29 +16,31 @@ export const backdrop = style({
 export const modal = style({
   backgroundColor: themeVars.color.white000,
   borderRadius: '16px',
-  padding: '2rem',
+  padding: '2.4rem',
   width: '90%',
   maxWidth: '400px',
   boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
 });
 
 export const title = style({
-  marginBottom: '1.6rem',
+  marginBottom: '2rem',
   textAlign: 'center',
-  ...themeVars.font.bodySmall,
+  color: themeVars.color.gray700,
+  ...themeVars.font.displaySmall,
 });
 
 export const buttonContainer = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: '8px',
+  gap: '0.8rem',
 });
 
 export const button = style({
-  padding: '12px',
-  borderRadius: '12px',
+  padding: '1.4rem',
+  borderRadius: '8px',
   border: `1px solid ${themeVars.color.gray200}`,
-  background: themeVars.color.gray100,
+  background: themeVars.color.point,
+  color: themeVars.color.white000,
   cursor: 'pointer',
-  ...themeVars.font.labelLarge,
+  ...themeVars.font.headlineLarge,
 });

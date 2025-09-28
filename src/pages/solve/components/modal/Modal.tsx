@@ -18,21 +18,21 @@ const Modal = ({ isOpen, onClose, onSelect }: ModalProps) => {
         className={styles.modal}
         onClick={(e) => e.stopPropagation()}
       >
-        <p className={styles.title}>사진 업로드 방식을 선택하세요</p>
+        <p className={styles.title}>이미지 업로드 방식을 선택해주세요.</p>
         <div className={styles.buttonContainer}>
           <button
             type="button"
             className={styles.button}
             onClick={() => onSelect('one')}
           >
-            문제 사진만 올리기
+            문제만 (1장)
           </button>
           <button
             type="button"
             className={styles.button}
             onClick={() => onSelect('two')}
           >
-            문제 + 풀이 사진 올리기
+            문제와 풀이 (2장)
           </button>
         </div>
       </div>
