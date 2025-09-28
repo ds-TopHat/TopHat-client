@@ -95,7 +95,7 @@ const SectionTop = () => {
           style={{
             opacity: chat1Opacity,
             position: 'absolute',
-            top: '20rem',
+            top: '18rem',
             paddingLeft: '3rem',
             width: '100%',
             willChange: 'opacity',
@@ -109,7 +109,7 @@ const SectionTop = () => {
           style={{
             opacity: chat2Opacity,
             position: 'absolute',
-            top: `calc(20rem + 1.8rem + 6rem)`,
+            top: `calc(18rem + 1.8rem + 6rem)`,
             paddingLeft: '3rem',
             width: '100%',
             willChange: 'opacity',
@@ -123,7 +123,7 @@ const SectionTop = () => {
           style={{
             opacity: chat3Opacity,
             position: 'absolute',
-            top: `calc(20rem + 3.6rem + 21.8rem)`,
+            top: `calc(18rem + 3.6rem + 21.8rem)`,
             paddingLeft: '3rem',
             width: '100%',
             willChange: 'opacity',

@@ -5,7 +5,7 @@ export const mainContainer = style({
   display: 'flex',
   flexDirection: 'column',
   minHeight: '100dvh',
-  padding: '14rem 2.4rem 10rem',
+  padding: '9.6rem 2.4rem 10rem',
   gap: '1.6rem',
 
   backgroundColor: themeVars.color.gray100,
