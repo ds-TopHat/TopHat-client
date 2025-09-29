@@ -3,7 +3,7 @@ import { keyframes, style } from '@vanilla-extract/css';
 
 const wrapper = style({
   width: '100%',
-  minHeight: '100vh',
+  minHeight: '100dvh',
   height: '100%',
   paddingTop: '7.95rem',
   paddingBottom: '8.95rem',

@@ -48,7 +48,7 @@ const My = () => {
   }, [data?.unitsList]);
 
   if (isPending) {
-    return null;
+    return <div />;
   }
 
   const hasUnits = !!data?.unitsList && data.unitsList.length > 0;

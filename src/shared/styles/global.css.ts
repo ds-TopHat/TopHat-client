@@ -35,6 +35,7 @@ globalStyle('html, body', {
   MozUserSelect: 'none',
   msUserSelect: 'none',
   userSelect: 'none',
+  WebkitTapHighlightColor: 'transparent',
 });
 
 // A 태그 스타일
