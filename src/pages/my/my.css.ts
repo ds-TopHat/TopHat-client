@@ -63,6 +63,7 @@ export const noteImg = style({
   width: '100%',
   height: 'auto',
   display: 'block',
+  aspectRatio: '16 / 9',
 });
 
 export const noteContainer = style({
