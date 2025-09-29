@@ -28,7 +28,7 @@ export const modal = style({
 export const title = style({
   margin: '0.8rem 0',
   color: themeVars.color.gray600,
-  ...themeVars.font.headlineMedium,
+  ...themeVars.font.headlineLarge,
 });
 
 export const buttonGroup = style({
