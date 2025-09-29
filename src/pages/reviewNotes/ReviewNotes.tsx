@@ -14,7 +14,7 @@ const ReviewNotes = () => {
     navigate(routePath.REVIEW_NOTE_DETAIL.replace(':id', id.toString()));
   };
 
-  const { data, isLoading } = useGetReviewNotes();
+  const { data, isPending } = useGetReviewNotes();
 
   const loadMore = useCallback(() => {
     // 이후 추가
@@ -31,8 +31,8 @@ const ReviewNotes = () => {
     );
   };
 
-  if (isLoading) {
-    return <></>;
+  if (isPending) {
+    return <div />;
   }
 
   const downloadPdf = async () => {
@@ -44,28 +44,51 @@ const ReviewNotes = () => {
       .filter((item) => selectedCards.includes(item.questionId))
       .map((item) => item.problemImageUrl);
 
-    const blob = await createPdf({ problemImageUrls });
+    let url: string | undefined;
 
-    const url = window.URL.createObjectURL(blob);
+    try {
+      const blob = await createPdf({ problemImageUrls });
+      url = URL.createObjectURL(blob);
 
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const ua = navigator.userAgent;
+      const isIOS =
+        /iPhone|iPad|iPod/i.test(ua) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const isAndroid = /Android/i.test(ua);
+      const isMobile = isIOS || isAndroid;
 
-    if (isMobile) {
-      // 모바일에서는 새 창으로 열기
-      window.open(url, '_blank');
-    } else {
-      // PC에서는 다운로드
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'MAPI_exam.pdf';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      if (isMobile) {
+        // 모바일: 미리 빈 탭 열고 URL 나중에 할당
+        const newTab = window.open('', '_blank', 'noopener,noreferrer');
+        if (newTab) {
+          newTab.location.href = url;
+          setTimeout(() => URL.revokeObjectURL(url!), 8000);
+          url = undefined; // 중복 revoke 방지
+        } else {
+          // 팝업 차단 대응
+          const a = document.createElement('a');
+          a.href = url;
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
+      } else {
+        // PC: 다운로드
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'TopHat_오답노트.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+
+      setSelectedCards([]);
+    } finally {
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
     }
-
-    window.URL.revokeObjectURL(url);
-
-    setSelectedCards([]);
   };
 
   // 데이터 없을 때
