@@ -35,7 +35,7 @@ export const hello = style({
 });
 
 export const noteDiv = style({
-  padding: '2.6rem',
+  padding: '1.2rem 2.6rem 2.6rem',
   borderRadius: '12px',
   margin: 'auto 0',
 });

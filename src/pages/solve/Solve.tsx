@@ -117,25 +117,34 @@ const Solve = () => {
 
   // 다음 단계 보여주기 (API 호출 없이)
   const handleStepByStep = () => {
-    const finished = showNextStep(setChatList);
+    // 단계 진행 중 잠시 pending 상태
+    setIsPending(true);
 
-    if (finished) {
-      addChat({ from: 'server', text: '풀이를 모두 확인했습니다!' });
-      setTimeout(() => {
-        addChat({
-          from: 'server',
-          text: '새로운 문제를 질문하려면 카메라를 눌러주세요.',
-        });
-      }, 1000);
+    setTimeout(() => {
+      const finished = showNextStep(setChatList);
 
-      // 마지막 단계 후 토글 초기화
-      setToggleItems([
-        '단계별 풀이를 알려줘',
-        '전체 풀이를 알려줘',
-        '해결했어요!',
-      ]);
-    }
+      if (finished) {
+        addChat({ from: 'server', text: '풀이를 모두 확인했습니다!' });
+        setTimeout(() => {
+          addChat({
+            from: 'server',
+            text: '새로운 문제를 질문하려면 카메라를 눌러주세요.',
+          });
+        }, 1000);
+
+        // 마지막 단계 후 토글 초기화
+        setToggleItems([
+          '단계별 풀이를 알려줘',
+          '전체 풀이를 알려줘',
+          '해결했어요!',
+        ]);
+      }
+
+      // pending 종료
+      setIsPending(false);
+    }, 500); // 0.5초 딜레이
   };
+
   const handleSolved = () => {
     addChat({ from: 'server', text: '문제 해결을 축하합니다!' });
     setTimeout(() => {
