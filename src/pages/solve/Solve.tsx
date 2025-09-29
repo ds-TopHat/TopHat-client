@@ -52,8 +52,10 @@ const Solve = () => {
   ]);
 
   // 토글 클릭 핸들러
-  // 토글 클릭 핸들러
   const handleTextSelect = (text: string) => {
+    if (isPending) {
+      return;
+    }
     addChat({ from: 'me', text });
 
     if (
@@ -142,7 +144,7 @@ const Solve = () => {
 
       // pending 종료
       setIsPending(false);
-    }, 500); // 0.5초 딜레이
+    }, 500);
   };
 
   const handleSolved = () => {
@@ -226,7 +228,7 @@ const Solve = () => {
     } finally {
       // input 초기화 (같은 파일 다시 선택 가능하게)
       e.target.value = '';
-      // ✅ 여기서 모달 닫기
+      // 모달 닫기
       setIsOpen(false);
     }
   };

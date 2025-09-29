@@ -4,7 +4,7 @@ import { routePath } from './routePath';
 
 import { authService } from '@/shared/auth/services/authService';
 
-export function ProtectedRoute() {
+const ProtectedRoute = () => {
   const isAuthenticated = authService.isAuthenticated();
 
   if (!isAuthenticated) {
@@ -12,4 +12,6 @@ export function ProtectedRoute() {
   }
 
   return <Outlet />;
-}
+};
+
+export default ProtectedRoute;
