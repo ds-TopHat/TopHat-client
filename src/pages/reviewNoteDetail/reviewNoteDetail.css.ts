@@ -31,3 +31,8 @@ export const noteContent = style({
   whiteSpace: 'pre-wrap',
   ...themeVars.font.bodySmall,
 });
+
+export const img = style({
+  width: '100%',
+  maxWidth: '50rem',
+});

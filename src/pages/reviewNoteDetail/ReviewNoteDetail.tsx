@@ -79,7 +79,11 @@ const ReviewNoteDetail = () => {
         <p className={styles.date}>{formattedDate}</p>
       </div>
 
-      <img src={note.problemImageUrl} alt={`오답노트 ${note.questionId}`} />
+      <img
+        src={note.problemImageUrl}
+        alt={`오답노트 ${note.questionId}`}
+        className={styles.img}
+      />
 
       <div className={styles.noteContent}>{renderAiAnswer()}</div>
     </main>
