@@ -31,6 +31,10 @@ globalStyle('html, body', {
   backgroundColor: themeVars.color.gray200,
   boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
   overscrollBehavior: 'none',
+  WebkitUserSelect: 'none',
+  MozUserSelect: 'none',
+  msUserSelect: 'none',
+  userSelect: 'none',
 });
 
 // A 태그 스타일

@@ -29,6 +29,8 @@ const Solve = () => {
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const { mutateAsync: requestSolutionMutate } = usePostAiChat();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [expectedCount, setExpectedCount] = useState<1 | 2>(1);
 
   // 채팅 스크롤 항상 맨 아래로
   useEffect(() => {
@@ -178,52 +180,27 @@ const Solve = () => {
     }
   };
 
-  // 카메라 모달 선택
-  const handleModalSelect = async (option: 'one' | 'two') => {
-    setIsOpen(false);
-    setChatList([]);
-    solutionStepsRef.current = [];
-    setImageUploaded(false);
-    setS3Key('');
-    setDownloadUrls([]);
-    setToggleItems([
-      '단계별 풀이를 알려줘',
-      '전체 풀이를 알려줘',
-      '해결했어요!',
-    ]);
+  // 파일 선택 핸들러
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length < expectedCount) {
+      addServerMessage(
+        expectedCount === 1
+          ? '문제 이미지 1장을 선택해주세요.'
+          : '문제 이미지 1장, 풀이 이미지 1장을 선택해주세요.',
+      );
+      return;
+    }
 
-    const count = option === 'one' ? 1 : 2;
     try {
       const {
         uploadUrls,
         downloadUrls: presignedUrls,
         s3Key: presignedKey,
-      } = await getPresignedUrl(count);
+      } = await getPresignedUrl(expectedCount);
 
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.setAttribute('capture', 'environment');
-      input.multiple = count > 1;
-
-      const files = await new Promise<FileList | null>((resolve) => {
-        input.onchange = () => resolve(input.files);
-        input.click();
-      });
-
-      if (!files || files.length < count) {
-        return addServerMessage(
-          count > 1
-            ? '문제 이미지 1장, 풀이 이미지 1장을 선택해주세요.'
-            : '문제 이미지 1장을 선택해주세요.',
-        );
-      }
-
-      for (let i = 0; i < count; i++) {
-        const response: Response = await uploadToPresignedUrl(
-          uploadUrls[i],
-          files[i]!,
-        );
+      for (let i = 0; i < expectedCount; i++) {
+        const response = await uploadToPresignedUrl(uploadUrls[i], files[i]!);
         if (!response.ok) {
           throw new Error('S3 업로드 실패');
         }
@@ -237,6 +214,34 @@ const Solve = () => {
       addServerMessage(
         '이미지 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.',
       );
+    } finally {
+      // input 초기화 (같은 파일 다시 선택 가능하게)
+      e.target.value = '';
+      // ✅ 여기서 모달 닫기
+      setIsOpen(false);
+    }
+  };
+
+  // 모달에서 옵션 선택 시 input 트리거
+  const handleModalSelect = (option: 'one' | 'two') => {
+    setChatList([]);
+    solutionStepsRef.current = [];
+    setImageUploaded(false);
+    setS3Key('');
+    setDownloadUrls([]);
+    setToggleItems([
+      '단계별 풀이를 알려줘',
+      '전체 풀이를 알려줘',
+      '해결했어요!',
+    ]);
+
+    const count = option === 'one' ? 1 : 2;
+    setExpectedCount(count);
+
+    // input 설정 후 클릭 트리거
+    if (fileInputRef.current) {
+      fileInputRef.current.multiple = count > 1;
+      fileInputRef.current.click();
     }
   };
 
@@ -272,6 +277,13 @@ const Solve = () => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         onSelect={handleModalSelect}
+      />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
       />
     </div>
   );
