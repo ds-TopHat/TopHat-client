@@ -1,4 +1,5 @@
 import { useState, type InputHTMLAttributes } from 'react';
+import { IcEye, IcEyeOff } from '@components/icons';
 
 import * as styles from './input.css';
 
@@ -7,26 +8,40 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   rightButton?: React.ReactNode;
 }
 
-const Input = ({ error, value, rightButton, ...props }: InputProps) => {
+const Input = ({ error, value, rightButton, type, ...props }: InputProps) => {
   const [focused, setFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   let variant: keyof typeof styles.inputVariants = 'default';
-
   if (error) {
     variant = 'error';
   } else if (focused) {
     variant = 'active';
   } else if (value) {
     variant = 'filled';
-  } else {
-    variant = 'default';
   }
+
+  const inputType =
+    type === 'password' ? (showPassword ? 'text' : 'password') : type;
+
+  // password toggle 버튼
+  const passwordToggleButton =
+    type === 'password' ? (
+      <button
+        type="button"
+        className={styles.eyeButton}
+        onClick={() => setShowPassword((prev) => !prev)}
+      >
+        {showPassword ? <IcEye width={20} /> : <IcEyeOff width={20} />}
+      </button>
+    ) : null;
 
   return (
     <div className={styles.inputWrapper}>
       <div className={styles.inputInner}>
         <input
           {...props}
+          type={inputType}
           className={[
             styles.baseInput,
             styles.inputVariants[variant],
@@ -46,18 +61,20 @@ const Input = ({ error, value, rightButton, ...props }: InputProps) => {
           aria-invalid={!!error}
           aria-describedby={error ? 'input-error' : undefined}
         />
-        {rightButton && (
-          <div className={styles.rightButtonWrapper}>{rightButton}</div>
-        )}
-      </div>
-      {error ? (
-        <div id="input-error" className={styles.errorMessage}>
-          {error}
+        <div className={styles.rightButtonWrapper}>
+          {rightButton}
+          {passwordToggleButton}
         </div>
-      ) : (
-        <div className={styles.errorMessage} style={{ visibility: 'hidden' }} />
-      )}
+      </div>
+      <div
+        id="input-error"
+        className={styles.errorMessage}
+        style={{ visibility: error ? 'visible' : 'hidden' }}
+      >
+        {error || 'placeholder'}
+      </div>
     </div>
   );
 };
+
 export default Input;

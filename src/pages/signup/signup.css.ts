@@ -14,7 +14,7 @@ export const container = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingTop: '8rem',
+  paddingTop: '6rem',
   height: '100dvh',
   background: 'linear-gradient(0deg, #E7F0FF 0%, #FFF 100%)',
 });
@@ -30,7 +30,7 @@ export const buttonWrapper = style({
   width: '100%',
   maxWidth: '48rem',
 
-  padding: '0 3.6rem 2.4rem',
+  padding: '0 3.6rem 1.2rem',
   gap: '1.2rem',
   alignItems: 'center',
   bottom: '0',

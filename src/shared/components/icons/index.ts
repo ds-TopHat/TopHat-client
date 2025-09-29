@@ -7,6 +7,8 @@ export { default as IcChipNum } from './IcChipNum';
 export { default as IcChipShape } from './IcChipShape';
 export { default as IcDownArrow } from './IcDownArrow';
 export { default as IcExtract } from './IcExtract';
+export { default as IcEye } from './IcEye';
+export { default as IcEyeOff } from './IcEyeOff';
 export { default as IcFloatingSolve } from './IcFloatingSolve';
 export { default as IcGrayCheck } from './IcGrayCheck';
 export { default as IcHomeTextLogo } from './IcHomeTextLogo';
