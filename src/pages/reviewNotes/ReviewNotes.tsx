@@ -40,22 +40,32 @@ const ReviewNotes = () => {
       return;
     }
 
-    // 선택된 카드만 problemImageUrl 배열로 만들기
     const problemImageUrls = data
       .filter((item) => selectedCards.includes(item.questionId))
       .map((item) => item.problemImageUrl);
 
-    // PDF 생성
     const blob = await createPdf({ problemImageUrls });
 
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'MAPI_exam.pdf';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      // 모바일에서는 새 창으로 열기
+      window.open(url, '_blank');
+    } else {
+      // PC에서는 다운로드
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'MAPI_exam.pdf';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
     window.URL.revokeObjectURL(url);
+
+    setSelectedCards([]);
   };
 
   // 데이터 없을 때
@@ -72,10 +82,11 @@ const ReviewNotes = () => {
     <div className={styles.reviewContainer}>
       <h1 className={styles.title}>오답노트</h1>
       <button className={styles.pdfButton} onClick={downloadPdf}>
-        <IcExtract width={20} height={20} /> 오답노트 PDF로 추출하기
+        <IcExtract width={20} height={20} />
+        오답노트 PDF로 추출하기
       </button>
       <p className={styles.pdfComment}>
-        질문했던 문제를 골라 출력해서 다시 풀어봐요!
+        복습하고 싶은 문제를 선택해 풀어보세요!
       </p>
 
       <div className={styles.cardContainer}>
