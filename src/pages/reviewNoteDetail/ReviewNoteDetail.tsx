@@ -28,30 +28,35 @@ const ReviewNoteDetail = () => {
 
   const answerArray = JSON.parse(note.aiAnswer);
 
-  let formattedSteps = '';
-  let formattedAnswer = '';
-
-  if (Array.isArray(answerArray)) {
-    formattedSteps = answerArray
-      .map((item) => {
-        const key = Object.keys(item)[0];
-        if (key === 'answer') {
-          return null;
-        }
-        return item[key];
-      })
-      .filter(Boolean)
-      .join('\n');
-
-    const answerItem = answerArray.find(
-      (item) => Object.keys(item)[0] === 'answer',
-    );
-    if (answerItem) {
-      formattedAnswer = `\n\n답: ${answerItem['answer']}`;
+  // 서버에서 내려오는 수식/HTML을 안전하게 렌더링
+  const renderAiAnswer = () => {
+    if (!Array.isArray(answerArray)) {
+      return null;
     }
-  }
 
-  const formattedAiAnswer = formattedSteps + formattedAnswer;
+    return answerArray.map((item, idx) => {
+      const key = Object.keys(item)[0];
+      const content = item[key];
+      if (!content) {
+        return null;
+      }
+
+      if (key === 'answer') {
+        return (
+          <div
+            key={idx}
+            style={{ marginTop: '1rem' }}
+            dangerouslySetInnerHTML={{
+              __html: `<strong>답: </strong>${content}`,
+            }}
+          />
+        );
+      }
+
+      // step 내용은 HTML/SVG 그대로 렌더링
+      return <div key={idx} dangerouslySetInnerHTML={{ __html: content }} />;
+    });
+  };
 
   const formattedDate = (() => {
     const date = new Date(note.createdAt);
@@ -76,7 +81,7 @@ const ReviewNoteDetail = () => {
 
       <img src={note.problemImageUrl} alt={`오답노트 ${note.questionId}`} />
 
-      <p className={styles.noteContent}>{formattedAiAnswer}</p>
+      <div className={styles.noteContent}>{renderAiAnswer()}</div>
     </main>
   );
 };
