@@ -6,6 +6,7 @@ export const routePath = {
   SIGNUP: '/signup',
   REVIEW_NOTES: '/review-notes',
   REVIEW_NOTE_DETAIL: '/review-notes/:id',
+  LOGIN_CALLBACK: '/kakao/callback',
 } as const;
 
 export type Routes = (typeof routePath)[keyof typeof routePath];
