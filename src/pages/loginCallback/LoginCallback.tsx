@@ -13,6 +13,15 @@ const LoginCallback = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
+    const returnedState = params.get('state');
+
+    const savedState = sessionStorage.getItem('kakao_oauth_state');
+    sessionStorage.removeItem('kakao_oauth_state');
+
+    if (!returnedState || !savedState || returnedState !== savedState) {
+      navigate(routePath.LOGIN);
+      return;
+    }
 
     if (!code) {
       navigate(routePath.LOGIN);

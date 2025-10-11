@@ -4,6 +4,8 @@ import { style } from '@vanilla-extract/css';
 export const headerWrapper = style({
   display: 'flex',
   padding: '2rem 2.4rem',
+  // padding: '6rem 2.4rem 1.2rem',
+
   alignItems: 'center',
   justifyContent: 'space-between',
   position: 'fixed',

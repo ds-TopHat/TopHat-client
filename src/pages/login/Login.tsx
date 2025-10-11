@@ -78,6 +78,14 @@ const Login = () => {
     passwordRegex.test(password)
   );
 
+  const generateState = () => {
+    const array = new Uint8Array(16);
+    crypto.getRandomValues(array);
+    return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
+      '',
+    );
+  };
+
   const getRedirectUrl = () =>
     import.meta.env.MODE === 'development'
       ? import.meta.env.VITE_LOCAL_REDIRECT_URI
@@ -85,9 +93,12 @@ const Login = () => {
 
   const redirectUrl = getRedirectUrl();
 
-  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${import.meta.env.VITE_REST_API_KEY}&redirect_uri=${redirectUrl}&response_type=code&state=xyz`;
-
   const handleKakaoLogin = () => {
+    const state = generateState();
+    sessionStorage.setItem('kakao_oauth_state', state);
+
+    const kakaoURL = `${import.meta.env.VITE_KAKAO_AUTHORIZE_URL}?client_id=${import.meta.env.VITE_REST_API_KEY}&redirect_uri=${redirectUrl}&response_type=code&state=${state}`;
+
     window.location.href = kakaoURL;
   };
 

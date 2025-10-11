@@ -122,7 +122,7 @@ const Solve = () => {
     // 단계 진행 중 잠시 pending 상태
     setIsPending(true);
 
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       const finished = showNextStep(setChatList);
 
       if (finished) {
@@ -145,6 +145,7 @@ const Solve = () => {
       // pending 종료
       setIsPending(false);
     }, 500);
+    return () => clearTimeout(timeoutId);
   };
 
   const handleSolved = () => {
@@ -209,9 +210,15 @@ const Solve = () => {
         downloadUrls: presignedUrls,
         s3Key: presignedKey,
       } = await getPresignedUrl(expectedCount);
+      const sortedFiles = Array.from(files).sort(
+        (a, b) => a.lastModified - b.lastModified,
+      );
 
       for (let i = 0; i < expectedCount; i++) {
-        const response = await uploadToPresignedUrl(uploadUrls[i], files[i]!);
+        const response = await uploadToPresignedUrl(
+          uploadUrls[i],
+          sortedFiles[i]!,
+        );
         if (!response.ok) {
           throw new Error('S3 업로드 실패');
         }

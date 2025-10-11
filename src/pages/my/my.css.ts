@@ -17,7 +17,7 @@ export const title = style({
 
 export const name = style({
   color: themeVars.color.point,
-  fontSize: '2.9rem',
+  fontSize: '2.8rem',
   fontWeight: 400,
   lineHeight: 'normal',
   fontStyle: 'normal',
