@@ -6,6 +6,8 @@ const wrapper = style({
   minHeight: '100dvh',
   height: '100%',
   paddingTop: '7.95rem',
+  // paddingTop: '10.8rem',
+
   paddingBottom: '8.95rem',
   backgroundColor: themeVars.color.gray100,
 });

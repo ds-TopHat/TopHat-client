@@ -6,7 +6,7 @@ import { themeVars } from './theme.css';
 globalStyle(':root', {
   vars: {
     '--min-width': '375px',
-    '--max-width': '768px',
+    '--max-width': '820px',
   },
 });
 
@@ -30,12 +30,12 @@ globalStyle('html, body', {
   scrollBehavior: 'smooth',
   backgroundColor: themeVars.color.gray200,
   boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-  overscrollBehavior: 'none',
   WebkitUserSelect: 'none',
   MozUserSelect: 'none',
   msUserSelect: 'none',
   userSelect: 'none',
   WebkitTapHighlightColor: 'transparent',
+  overscrollBehavior: 'contain',
 });
 
 // A 태그 스타일
@@ -51,10 +51,10 @@ globalStyle('select', {
 
 // #root 스타일
 globalStyle('#root', {
-  position: 'relative',
-  width: '100%',
   minHeight: '100dvh',
-  backgroundColor: '#fff',
+  width: '100%',
+  backgroundColor: 'inherit',
+  position: 'relative',
 });
 
 // Webkit 스크롤바 숨기기
@@ -72,4 +72,15 @@ globalStyle('.swiper-pagination-bullet:active', {
   width: '4px',
   height: '4px',
   backgroundColor: themeVars.color.white000,
+});
+
+globalStyle('html::before', {
+  content: "''",
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: '#ffffff',
+  zIndex: -1,
 });

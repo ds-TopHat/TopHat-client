@@ -17,7 +17,7 @@ export const title = style({
 
 export const name = style({
   color: themeVars.color.point,
-  fontSize: '2.9rem',
+  fontSize: '2.8rem',
   fontWeight: 400,
   lineHeight: 'normal',
   fontStyle: 'normal',
@@ -35,7 +35,7 @@ export const hello = style({
 });
 
 export const noteDiv = style({
-  padding: '2.6rem',
+  padding: '1.2rem 2.6rem 2.6rem',
   borderRadius: '12px',
   margin: 'auto 0',
 });

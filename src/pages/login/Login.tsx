@@ -30,7 +30,7 @@ const Login = () => {
       { email, password },
       {
         onSuccess: () => {
-          navigate(routePath.HOME);
+          navigate(routePath.SOLVE);
         },
         onError: () => {
           setLoginError('이메일 또는 비밀번호가 올바르지 않습니다.');
@@ -78,7 +78,29 @@ const Login = () => {
     passwordRegex.test(password)
   );
 
-  const handleKakaoLogin = () => {};
+  const generateState = () => {
+    const array = new Uint8Array(16);
+    crypto.getRandomValues(array);
+    return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
+      '',
+    );
+  };
+
+  const getRedirectUrl = () =>
+    import.meta.env.MODE === 'development'
+      ? import.meta.env.VITE_LOCAL_REDIRECT_URI
+      : import.meta.env.VITE_PROD_REDIRECT_URI;
+
+  const redirectUrl = getRedirectUrl();
+
+  const handleKakaoLogin = () => {
+    const state = generateState();
+    sessionStorage.setItem('kakao_oauth_state', state);
+
+    const kakaoURL = `${import.meta.env.VITE_KAKAO_AUTHORIZE_URL}?client_id=${import.meta.env.VITE_REST_API_KEY}&redirect_uri=${redirectUrl}&response_type=code&state=${state}`;
+
+    window.location.href = kakaoURL;
+  };
 
   return (
     <div className={styles.container}>

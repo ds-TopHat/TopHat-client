@@ -52,8 +52,10 @@ const Solve = () => {
   ]);
 
   // 토글 클릭 핸들러
-  // 토글 클릭 핸들러
   const handleTextSelect = (text: string) => {
+    if (isPending) {
+      return;
+    }
     addChat({ from: 'me', text });
 
     if (
@@ -117,25 +119,35 @@ const Solve = () => {
 
   // 다음 단계 보여주기 (API 호출 없이)
   const handleStepByStep = () => {
-    const finished = showNextStep(setChatList);
+    // 단계 진행 중 잠시 pending 상태
+    setIsPending(true);
 
-    if (finished) {
-      addChat({ from: 'server', text: '풀이를 모두 확인했습니다!' });
-      setTimeout(() => {
-        addChat({
-          from: 'server',
-          text: '새로운 문제를 질문하려면 카메라를 눌러주세요.',
-        });
-      }, 1000);
+    const timeoutId = setTimeout(() => {
+      const finished = showNextStep(setChatList);
 
-      // 마지막 단계 후 토글 초기화
-      setToggleItems([
-        '단계별 풀이를 알려줘',
-        '전체 풀이를 알려줘',
-        '해결했어요!',
-      ]);
-    }
+      if (finished) {
+        addChat({ from: 'server', text: '풀이를 모두 확인했습니다!' });
+        setTimeout(() => {
+          addChat({
+            from: 'server',
+            text: '새로운 문제를 질문하려면 카메라를 눌러주세요.',
+          });
+        }, 1000);
+
+        // 마지막 단계 후 토글 초기화
+        setToggleItems([
+          '단계별 풀이를 알려줘',
+          '전체 풀이를 알려줘',
+          '해결했어요!',
+        ]);
+      }
+
+      // pending 종료
+      setIsPending(false);
+    }, 500);
+    return () => clearTimeout(timeoutId);
   };
+
   const handleSolved = () => {
     addChat({ from: 'server', text: '문제 해결을 축하합니다!' });
     setTimeout(() => {
@@ -198,9 +210,15 @@ const Solve = () => {
         downloadUrls: presignedUrls,
         s3Key: presignedKey,
       } = await getPresignedUrl(expectedCount);
+      const sortedFiles = Array.from(files).sort(
+        (a, b) => a.lastModified - b.lastModified,
+      );
 
       for (let i = 0; i < expectedCount; i++) {
-        const response = await uploadToPresignedUrl(uploadUrls[i], files[i]!);
+        const response = await uploadToPresignedUrl(
+          uploadUrls[i],
+          sortedFiles[i]!,
+        );
         if (!response.ok) {
           throw new Error('S3 업로드 실패');
         }
@@ -217,7 +235,7 @@ const Solve = () => {
     } finally {
       // input 초기화 (같은 파일 다시 선택 가능하게)
       e.target.value = '';
-      // ✅ 여기서 모달 닫기
+      // 모달 닫기
       setIsOpen(false);
     }
   };

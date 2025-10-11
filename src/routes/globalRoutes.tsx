@@ -6,6 +6,7 @@ import {
   ReviewNotesPage,
   SignupPage,
   SolvePage,
+  LoginCallbackPage,
 } from './lazy';
 import { routePath } from './routePath';
 
@@ -21,6 +22,10 @@ export const publicRoutes = [
   {
     path: routePath.HOME,
     Component: HomePage,
+  },
+  {
+    path: routePath.LOGIN_CALLBACK,
+    Component: LoginCallbackPage,
   },
 ];
 

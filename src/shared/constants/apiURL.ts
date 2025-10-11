@@ -10,6 +10,11 @@ export const API_URL = {
   USER_DELETE: '/api/v0/users/delete',
   REISSUE: '/api/v0/users/refreshtoken',
 
+  // kakao
+  KAKAO_LOGIN: '/api/auth/kakao/login',
+  KAKAO_SIGNUP: '/api/auth/kakao/signup',
+  KAKAO_AUTHCODE: '/api/auth/kakao/authcode',
+
   // email-verification-controller
   VERIFY_CODE: '/api/v0/email-auth/verify-code',
   REQUEST_CODE: '/api/v0/email-auth/request-code',

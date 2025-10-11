@@ -4,7 +4,7 @@ import Error from '@pages/error/Error';
 import GlobalLayout from './Layout';
 import { routePath } from './routePath';
 import { protectedRoutes, publicRoutes } from './globalRoutes';
-import { ProtectedRoute } from './protectedRoute';
+import ProtectedRoute from './protectedRoute';
 
 export const router = createBrowserRouter([
   {
