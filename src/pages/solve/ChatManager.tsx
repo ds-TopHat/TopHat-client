@@ -4,7 +4,6 @@ export type Chat = {
   from: 'me' | 'server';
   text?: string; // 일반 텍스트 또는 HTML(SVG 포함)
   imageUrl?: string;
-  buttons?: { label: string; onClick: () => void }[];
 };
 
 interface ChatManagerProps {
@@ -41,19 +40,6 @@ const ChatManager = ({ chat }: ChatManagerProps) => {
         <img src={chat.imageUrl} alt="" className={styles.chatImage} />
       )}
       {renderText()}
-      {chat.buttons && chat.buttons.length > 0 && (
-        <div className={styles.chatButtons}>
-          {chat.buttons.map((btn, idx) => (
-            <button
-              key={idx}
-              className={styles.chatButton}
-              onClick={btn.onClick}
-            >
-              {btn.label}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
