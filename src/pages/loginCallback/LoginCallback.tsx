@@ -83,6 +83,7 @@ const LoginCallback = () => {
           });
           tokenService.saveAccessToken(loginRes.data.result.access_token);
           tokenService.saveRefreshToken(loginRes.data.result.refresh_token);
+          await new Promise((resolve) => setTimeout(resolve, 0));
         }
         navigate(routePath.SOLVE);
       } catch {

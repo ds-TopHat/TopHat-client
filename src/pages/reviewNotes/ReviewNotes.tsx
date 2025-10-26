@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useInfiniteScroll } from '@hooks/useInfiniteScroll';
 import ReviewCard from '@components/reviewCard/ReviewCard';
 import { routePath } from '@routes/routePath';
+import Toast from '@components/toast/Toast';
 
 import * as styles from './reviewNotes.css';
 import { useGetReviewNotes, usePostReviewPdf } from './apis/queries';
@@ -24,7 +25,11 @@ const ReviewNotes = () => {
 
   const { mutateAsync: createPdf } = usePostReviewPdf();
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
+  const [toasts, setToasts] = useState<string[]>([]);
 
+  const showToast = (msg: string) => {
+    setToasts((prev) => [...prev, msg]);
+  };
   const toggleSelectCard = (id: number) => {
     setSelectedCards((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
@@ -34,9 +39,9 @@ const ReviewNotes = () => {
   if (isPending) {
     return <div />;
   }
-
   const downloadPdf = async () => {
     if (!data || selectedCards.length === 0) {
+      showToast('PDF로 추출할 문제를 먼저 선택해주세요.');
       return;
     }
 
@@ -103,6 +108,15 @@ const ReviewNotes = () => {
 
   return (
     <div className={styles.reviewContainer}>
+      {toasts.map((msg, i) => (
+        <Toast
+          key={i}
+          message={msg}
+          onClose={() =>
+            setToasts((prev) => prev.filter((_, index) => index !== i))
+          }
+        />
+      ))}
       <h1 className={styles.title}>오답노트</h1>
       <button className={styles.pdfButton} onClick={downloadPdf}>
         <IcExtract width={20} height={20} />
