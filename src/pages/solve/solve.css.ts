@@ -59,22 +59,6 @@ const chatServerText = style({
   ...themeVars.font.bodySmall,
 });
 
-const chatButtons = style({
-  display: 'flex',
-  gap: '0.8rem',
-  marginTop: '0.8rem',
-});
-
-const chatButton = style({
-  flex: 1,
-  padding: '0.8rem',
-  borderRadius: '10px',
-  border: `1px solid ${themeVars.color.gray200}`,
-  background: themeVars.color.gray100,
-  cursor: 'pointer',
-  ...themeVars.font.labelSmall,
-});
-
 export {
   wrapper,
   chatContainer,
@@ -83,8 +67,6 @@ export {
   chatImage,
   chatText,
   chatServerText,
-  chatButtons,
-  chatButton,
 };
 
 const bounce = keyframes({

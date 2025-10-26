@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { routePath } from '@routes/routePath';
 import { instance } from '@apis/instance';
+import Loading from '@pages/loading/Loading';
 
 import { tokenService } from '@/shared/auth/services/tokenService';
 import { API_URL } from '@/shared/constants/apiURL';
@@ -93,7 +94,7 @@ const LoginCallback = () => {
     handleLogin();
   }, [navigate]);
 
-  return <div />;
+  return <Loading />;
 };
 
 export default LoginCallback;

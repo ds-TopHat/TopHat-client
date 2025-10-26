@@ -7,6 +7,7 @@ import {
   SignupPage,
   SolvePage,
   LoginCallbackPage,
+  SimpleWhiteboardPage,
 } from './lazy';
 import { routePath } from './routePath';
 
@@ -45,5 +46,9 @@ export const protectedRoutes = [
   {
     path: routePath.REVIEW_NOTE_DETAIL,
     Component: ReviewNoteDetailPage,
+  },
+  {
+    path: routePath.SIMPLE_WHITEBOARD,
+    Component: SimpleWhiteboardPage,
   },
 ];
