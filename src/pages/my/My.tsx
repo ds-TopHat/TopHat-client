@@ -5,6 +5,7 @@ import { getKoreanParticle } from '@utils/korParticle';
 import { useNavigate } from 'react-router-dom';
 import { routePath } from '@routes/routePath';
 import { themeVars } from '@styles/theme.css';
+import Toast from '@components/toast/Toast';
 
 import * as styles from './my.css';
 import { useDeleteMe, useGetMe } from './apis/queries';
@@ -21,6 +22,7 @@ const My = () => {
 
   const [expanded, setExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const { data, isPending } = useGetMe();
   const { mutateAsync: deleteMe } = useDeleteMe();
@@ -30,6 +32,14 @@ const My = () => {
   const closeModal = () => setIsModalOpen(false);
   const handleDelete = async () => {
     await deleteMe();
+  };
+
+  const goWhiteboard = () => {
+    if (window.innerWidth >= 768) {
+      navigate(routePath.SIMPLE_WHITEBOARD);
+    } else {
+      setShowToast(true);
+    }
   };
 
   const mappedChips = useMemo(() => {
@@ -181,6 +191,11 @@ const My = () => {
 
       {/* 공통 버튼 영역 */}
       <div className={styles.buttonContainer}>
+        <button type="button" className={styles.button} onClick={goWhiteboard}>
+          연습장
+          <IcRightArrow width={6} height={12} color={themeVars.color.gray800} />
+        </button>
+
         <button
           type="button"
           className={styles.button}
@@ -199,6 +214,13 @@ const My = () => {
         onClose={closeModal}
         onConfirm={handleDelete}
       />
+
+      {showToast && (
+        <Toast
+          message={`현재 화면 크기에서는 이용할 수 없습니다.\n태블릿 이상의 기기에서 이용해 주세요.`}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 };

@@ -18,13 +18,14 @@ export const toast = style({
   transform: 'translateX(-50%)',
   padding: '1rem 2rem',
   borderRadius: '10px',
-  minWidth: '30rem',
+  minWidth: '32rem',
   textAlign: 'center',
 
   backgroundColor: themeVars.color.gray800,
   color: themeVars.color.white000,
   ...themeVars.font.bodySmall,
   zIndex: themeVars.zIndex.five,
+  whiteSpace: 'pre-line',
 });
 
 export const enter = style({
