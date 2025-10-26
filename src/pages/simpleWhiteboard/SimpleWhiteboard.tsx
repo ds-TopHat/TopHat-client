@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as fabric from 'fabric';
 import {
   FaPen,
@@ -22,14 +22,13 @@ const SimpleWhiteboard = () => {
   const [penSize, setPenSize] = useState(5);
   const [eraserSize, setEraserSize] = useState(30);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [canvasOffset, setCanvasOffset] = useState(0);
 
   const isDrawingActive = isPenActive || isEraser;
 
-  const drawBackground = useCallback((canvas: fabric.Canvas) => {
+  const drawBackground = (canvas: fabric.Canvas) => {
     canvas.backgroundColor = '#ffffff';
     canvas.renderAll();
-  }, []);
+  };
 
   useEffect(() => {
     if (!wrapperRef.current || !problemAreaRef.current) {
@@ -37,14 +36,12 @@ const SimpleWhiteboard = () => {
     }
 
     const currentWrapper = wrapperRef.current;
+    const currentProblemArea = problemAreaRef.current;
     const canvasEl = document.createElement('canvas');
     canvasEl.style.width = '100%';
     canvasEl.style.height = '100%';
     canvasEl.style.display = 'block';
     currentWrapper.appendChild(canvasEl);
-
-    const problemAreaWidth = problemAreaRef.current.offsetWidth;
-    setCanvasOffset(problemAreaWidth);
 
     const canvas = new fabric.Canvas(canvasEl, {
       selection: false,
@@ -65,14 +62,12 @@ const SimpleWhiteboard = () => {
     });
 
     const resize = () => {
-      if (!canvas || !problemAreaRef.current) {
+      if (!canvas || !currentWrapper || !currentProblemArea) {
         return;
       }
       const rect = currentWrapper.getBoundingClientRect();
-      const newProblemAreaWidth = problemAreaRef.current.offsetWidth;
       canvas.setWidth(Math.floor(rect.width));
       canvas.setHeight(Math.floor(rect.height));
-      setCanvasOffset(newProblemAreaWidth);
       drawBackground(canvas);
     };
     resize();
@@ -86,8 +81,10 @@ const SimpleWhiteboard = () => {
 
     return () => {
       window.removeEventListener('resize', resize);
-      canvas.dispose();
-      if (currentWrapper.contains(canvasEl)) {
+      if (canvasRef.current) {
+        canvasRef.current.dispose();
+      }
+      if (currentWrapper && currentWrapper.contains(canvasEl)) {
         currentWrapper.removeChild(canvasEl);
       }
       canvasRef.current = null;
@@ -146,7 +143,7 @@ const SimpleWhiteboard = () => {
 
   const handleSave = () => {
     const canvas = canvasRef.current;
-    if (!canvas || !problemAreaRef.current) {
+    if (!canvas) {
       return;
     }
 
