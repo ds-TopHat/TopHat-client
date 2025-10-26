@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { routePath } from '@routes/routePath';
 import { instance } from '@apis/instance';
+import Loading from '@pages/loading/Loading';
 
 import { tokenService } from '@/shared/auth/services/tokenService';
 import { API_URL } from '@/shared/constants/apiURL';
@@ -83,7 +84,6 @@ const LoginCallback = () => {
           });
           tokenService.saveAccessToken(loginRes.data.result.access_token);
           tokenService.saveRefreshToken(loginRes.data.result.refresh_token);
-          await new Promise((resolve) => setTimeout(resolve, 0));
         }
         navigate(routePath.SOLVE);
       } catch {
@@ -94,7 +94,7 @@ const LoginCallback = () => {
     handleLogin();
   }, [navigate]);
 
-  return <div />;
+  return <Loading />;
 };
 
 export default LoginCallback;
