@@ -30,7 +30,7 @@ export const buttonWrapper = style({
   width: '100%',
   maxWidth: '48rem',
 
-  padding: '0 3.6rem 1.6rem',
+  padding: '0 3.6rem 2.4rem',
   gap: '1.2rem',
   alignItems: 'center',
   bottom: '0',
