@@ -6,7 +6,7 @@ import { themeVars } from './theme.css';
 globalStyle(':root', {
   vars: {
     '--min-width': '375px',
-    '--max-width': '820px',
+    '--max-width': '1180px',
   },
 });
 

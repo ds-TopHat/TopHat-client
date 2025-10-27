@@ -8,7 +8,7 @@ export const footerWrapper = style({
   gap: '0.8rem',
 
   width: '100%',
-  height: '14.4rem',
+  height: '18rem',
   padding: '3.6rem 2.4rem 6rem 2.4rem',
 
   backgroundColor: themeVars.color.gray600,
