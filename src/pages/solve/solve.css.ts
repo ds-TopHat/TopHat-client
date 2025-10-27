@@ -59,6 +59,12 @@ const chatServerText = style({
   ...themeVars.font.bodySmall,
 });
 
+const chatMyText = style({
+  color: themeVars.color.point,
+  wordBreak: 'break-word',
+  ...themeVars.font.bodySmall,
+});
+
 export {
   wrapper,
   chatContainer,
@@ -67,6 +73,7 @@ export {
   chatImage,
   chatText,
   chatServerText,
+  chatMyText,
 };
 
 const bounce = keyframes({
@@ -87,6 +94,9 @@ export const dot = style({
   backgroundColor: themeVars.color.point,
   animation: `${bounce} 1.2s infinite ease-in-out both`,
   selectors: {
+    [`${chatBubbleRight} &`]: {
+      backgroundColor: themeVars.color.white000,
+    },
     '&:nth-child(1)': { animationDelay: '0s' },
     '&:nth-child(2)': { animationDelay: '0.2s' },
     '&:nth-child(3)': { animationDelay: '0.4s' },
