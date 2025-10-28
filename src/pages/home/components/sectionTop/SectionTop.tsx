@@ -89,7 +89,7 @@ const SectionTop = () => {
           <IcMainGroup
             style={{
               willChange: 'opacity',
-              width: 'clamp(425.5px, 30vw, 600px)',
+              width: 'clamp(425.5px, 60vw, 600px)',
               height: 'auto',
             }}
           />
@@ -108,7 +108,9 @@ const SectionTop = () => {
           <IcMainChat1
             width={168}
             height={68}
-            style={{ willChange: 'opacity' }}
+            style={{
+              willChange: 'opacity',
+            }}
           />
         </motion.div>
 

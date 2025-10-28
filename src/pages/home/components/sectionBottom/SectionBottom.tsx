@@ -20,9 +20,9 @@ const SectionBottom = () => {
     }
   }, []);
 
-  const FADE_IN_START = offsetTop - window.innerHeight / 2 + 40;
-  const FADE_IN_GAP = 200;
-  const FADE_OUT_GAP = 200;
+  const FADE_IN_START = offsetTop - window.innerHeight / 2;
+  const FADE_IN_GAP = 180;
+  const FADE_OUT_GAP = 180;
 
   const opacityIn = useTransform(
     scrollY,

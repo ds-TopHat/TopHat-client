@@ -7,6 +7,6 @@ export const sectionTopWrapper = style({
   alignItems: 'center',
 
   width: '100%',
-  height: '249.8rem',
+  height: '256rem',
   background: 'linear-gradient(180deg, #2150EC 0%,#82acff 100%)',
 });

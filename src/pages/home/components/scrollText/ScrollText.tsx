@@ -3,7 +3,7 @@ import * as styles from '@pages/home/components/scrollText/scrollText.css';
 
 const ScrollText = () => {
   const { scrollY } = useScroll();
-  const BREAKPOINT = 2380;
+  const BREAKPOINT = 2400;
 
   const positionY = useTransform(scrollY, (y) =>
     y < BREAKPOINT ? 'fixed' : 'absolute',
