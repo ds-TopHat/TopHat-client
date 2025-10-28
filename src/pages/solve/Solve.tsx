@@ -81,7 +81,7 @@ const Solve = () => {
       return setTimeout(() => {
         addChat({
           from: 'server',
-          text: '문제 이미지를 먼저 업로드 해주세요!',
+          text: '질문을 시작하려면 카메라 버튼을 눌러 이미지를 업로드해 주세요!',
         });
       }, 300);
     }
@@ -231,17 +231,20 @@ const Solve = () => {
     setIsOpen(false);
 
     const files = e.target.files;
-    if (!files || files.length < expectedCount) {
+
+    // 2. 파일 개수 검증 로직 수정
+    // 필요한 개수와 다르다면 에러 메시지 표시
+    if (!files || files.length !== expectedCount) {
       addServerMessage(
         expectedCount === 1
-          ? '문제 이미지 1장을 선택해주세요.'
-          : '문제 이미지 1장, 풀이 이미지 1장을 선택해주세요.',
+          ? '정확한 풀이를 위해 문제 이미지 1장을 선택해주세요.'
+          : '정확한 풀이를 위해 문제 이미지 1장, 풀이 이미지 1장을 선택해주세요.',
       );
       e.target.value = '';
       return;
     }
 
-    // 2. 'me' 로딩 UI 시작 및 초기화
+    // 3. 'me' 로딩 UI 시작 및 초기화
     setUploadingSlots(Array.from({ length: expectedCount }, (_, i) => i));
     setIsUploading(true);
     const uploadedUrls: string[] = [];
@@ -253,7 +256,6 @@ const Solve = () => {
         s3Key: presignedKey,
       } = await getPresignedUrl(expectedCount);
 
-      // lastModified 정렬 로직 제거
       const filesArray = Array.from(files);
 
       // S3 업로드 루프: filesArray의 순서를 그대로 사용
@@ -269,14 +271,13 @@ const Solve = () => {
         uploadedUrls.push(presignedUrls[i]);
       }
 
-      // 3. S3 업로드 완료 후, 로딩을 끄지 않고 프리로딩 시작
+      // 4. S3 업로드 완료 후, 로딩을 끄지 않고 프리로딩 시작
       await preloadImages(uploadedUrls);
 
-      // 4. 프리로딩 완료 후, 로딩 제거하고 동시에 이미지 추가
+      // 5. 프리로딩 완료 후, 로딩 제거하고 동시에 이미지 추가
       setUploadingSlots([]);
       setIsUploading(false);
 
-      // uploadedUrls는 사용자가 선택한 순서대로
       uploadedUrls.forEach((url) => {
         handleImageSelect(url);
       });
@@ -285,7 +286,7 @@ const Solve = () => {
       setDownloadUrls(presignedUrls);
       setImageUploaded(true);
     } catch {
-      // 5. 실패 시
+      // 6. 실패 시
       addServerMessage(
         '이미지 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.',
       );
@@ -293,7 +294,7 @@ const Solve = () => {
       setUploadingSlots([]);
       setIsUploading(false);
     } finally {
-      // 6. 모든 작업이 끝나면 input 초기화
+      // 7. 모든 작업이 끝나면 input 초기화
       e.target.value = '';
     }
   };
