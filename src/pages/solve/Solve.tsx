@@ -349,7 +349,7 @@ const Solve = () => {
         items={toggleItems}
         onTextSelect={handleTextSelect}
         onCameraClick={() => setIsOpen(true)}
-        disabled={isPending}
+        disabled={isPending || isUploading}
       />
       <Modal
         isOpen={isOpen}
