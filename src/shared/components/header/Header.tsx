@@ -19,7 +19,13 @@ const Header = ({ isHome = false }: HeaderProps) => {
   const { pathname } = useLocation();
 
   const goHome = () => navigate(routePath.HOME);
-  const goBack = () => navigate(-1);
+  const goBack = () => {
+    if (window.history?.length && window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate(routePath.HOME, { replace: true });
+    }
+  };
   const goMyPage = () => navigate(routePath.MY);
 
   const isMyPage = pathname === routePath.MY;
