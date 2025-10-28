@@ -4,8 +4,6 @@ import { style } from '@vanilla-extract/css';
 export const headerWrapper = style({
   display: 'flex',
   padding: '2rem 2.4rem',
-  // padding: '6rem 2.4rem 1.2rem',
-
   alignItems: 'center',
   justifyContent: 'space-between',
   position: 'fixed',
@@ -14,4 +12,15 @@ export const headerWrapper = style({
   backdropFilter: 'blur(5px)',
   WebkitBackdropFilter: 'blur(5px)',
   zIndex: themeVars.zIndex.five,
+});
+
+export const leftGroup = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '1.6rem',
+});
+
+export const rightGroup = style({
+  display: 'flex',
+  alignItems: 'center',
 });
