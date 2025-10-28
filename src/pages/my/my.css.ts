@@ -146,6 +146,7 @@ export const chipList = style({
 
 export const chipListWrapper = style({
   position: 'relative',
+  width: '60rem',
 });
 
 export const chipGradientOverlay = style({

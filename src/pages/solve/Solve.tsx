@@ -55,6 +55,7 @@ const Solve = () => {
 
   const addChat = (chat: Chat) => setChatList((prev) => [...prev, chat]);
   const addServerMessage = (text: string) => addChat({ from: 'server', text });
+
   const handleImageSelect = (url: string) =>
     addChat({ from: 'me', imageUrl: url });
 
@@ -67,7 +68,7 @@ const Solve = () => {
 
   // 토글 클릭 핸들러
   const handleTextSelect = (text: string) => {
-    if (isPending) {
+    if (isPending || isUploading) {
       return;
     }
     addChat({ from: 'me', text });
@@ -191,12 +192,12 @@ const Solve = () => {
         text: solutionStepsRef.current.map((s) => s.text).join('\n\n'),
       });
 
-      // setTimeout(() => {
-      //   addChat({
-      //     from: 'server',
-      //     text: '새로운 문제를 질문하려면 카메라를 눌러주세요.',
-      //   });
-      // }, 500);
+      setTimeout(() => {
+        addChat({
+          from: 'server',
+          text: '새로운 문제를 질문하려면 카메라를 눌러주세요.',
+        });
+      }, 1000);
 
       // 토글 그대로 유지
       setToggleItems([
