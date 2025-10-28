@@ -6,7 +6,11 @@ import ThemeColorHandler from '@hooks/ThemeColorHandler';
 const Layout = () => {
   const location = useLocation();
 
-  const noHeaderPaths = [routePath.LOGIN, routePath.SIGNUP];
+  const noHeaderPaths = [
+    routePath.LOGIN,
+    routePath.SIGNUP,
+    routePath.LOGIN_CALLBACK,
+  ];
   const showHeader = !noHeaderPaths.some((path) =>
     location.pathname.startsWith(path),
   );
