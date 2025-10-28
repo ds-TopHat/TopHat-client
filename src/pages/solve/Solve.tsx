@@ -25,6 +25,7 @@ const preloadImages = (urls: string[]): Promise<void> => {
 
   return Promise.all(promises).then(() => undefined);
 };
+
 // 타입
 type StepItem = Record<`step ${number}`, string>;
 type AnswerItem = { answer: string };
@@ -189,6 +190,13 @@ const Solve = () => {
         from: 'server',
         text: solutionStepsRef.current.map((s) => s.text).join('\n\n'),
       });
+
+      // setTimeout(() => {
+      //   addChat({
+      //     from: 'server',
+      //     text: '새로운 문제를 질문하려면 카메라를 눌러주세요.',
+      //   });
+      // }, 500);
 
       // 토글 그대로 유지
       setToggleItems([
