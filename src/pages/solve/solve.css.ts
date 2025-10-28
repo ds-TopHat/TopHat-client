@@ -24,7 +24,10 @@ const chatContainer = style({
 
 const chatBubbleLeft = style({
   alignSelf: 'flex-start',
-  maxWidth: '32rem',
+  width: 'fit-content',
+
+  maxWidth: 'min(80vw, 45rem)',
+
   padding: '1rem',
   borderRadius: '1.2rem',
   backgroundColor: themeVars.color.white000,
@@ -33,7 +36,9 @@ const chatBubbleLeft = style({
 
 const chatBubbleRight = style({
   alignSelf: 'flex-end',
-  maxWidth: '32rem',
+  width: 'fit-content',
+
+  maxWidth: 'min(80vw, 45rem)',
   padding: '1rem',
   borderRadius: '12px',
   background: themeVars.color.point,
