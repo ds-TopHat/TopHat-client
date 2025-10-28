@@ -81,7 +81,7 @@ const Solve = () => {
       return setTimeout(() => {
         addChat({
           from: 'server',
-          text: '문제 이미지를 먼저 업로드 해주세요!',
+          text: '질문을 시작하려면 카메라 버튼을 눌러 이미지를 업로드해 주세요!',
         });
       }, 300);
     }
