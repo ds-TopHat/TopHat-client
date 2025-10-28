@@ -21,8 +21,8 @@ const SectionBottom = () => {
   }, []);
 
   const FADE_IN_START = offsetTop - window.innerHeight / 2;
-  const FADE_IN_GAP = 180;
-  const FADE_OUT_GAP = 180;
+  const FADE_IN_GAP = 150;
+  const FADE_OUT_GAP = 150;
 
   const opacityIn = useTransform(
     scrollY,
@@ -33,7 +33,7 @@ const SectionBottom = () => {
   const translateYIn = useTransform(
     scrollY,
     [FADE_IN_START, FADE_IN_START + FADE_IN_GAP],
-    [-110, -160],
+    [-100, -150],
   );
 
   const opacityOut = useTransform(

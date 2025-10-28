@@ -79,7 +79,7 @@ const SectionTop = () => {
         <motion.div
           style={{
             opacity: groupOpacity,
-            maxWidth: '1180',
+            maxWidth: 1180,
             margin: '0 auto',
             display: 'flex',
             justifyContent: 'flex-end',

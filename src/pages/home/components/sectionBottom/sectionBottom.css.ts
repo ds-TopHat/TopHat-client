@@ -4,7 +4,7 @@ import { style } from '@vanilla-extract/css';
 const sectionBottomWrapper = style({
   position: 'relative',
   width: '100%',
-  height: '94rem',
+  height: '93rem',
   background: 'linear-gradient(180deg, #82acff 0%, #D7ECFF 85%)',
   overflow: 'hidden',
 });
