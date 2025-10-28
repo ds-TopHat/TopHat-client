@@ -77,7 +77,12 @@ const Solve = () => {
       text !== '해결했어요!' &&
       (!imageUploaded || !s3Key || !downloadUrls.length)
     ) {
-      return addServerMessage('문제 이미지를 먼저 업로드 해주세요!');
+      return setTimeout(() => {
+        addChat({
+          from: 'server',
+          text: '문제 이미지를 먼저 업로드 해주세요!',
+        });
+      }, 300);
     }
 
     switch (text) {
@@ -164,7 +169,12 @@ const Solve = () => {
   };
 
   const handleSolved = () => {
-    addChat({ from: 'server', text: '문제 해결을 축하합니다!' });
+    setTimeout(() => {
+      addChat({
+        from: 'server',
+        text: '문제 해결을 축하합니다!',
+      });
+    }, 300);
     setTimeout(() => {
       addChat({
         from: 'server',
