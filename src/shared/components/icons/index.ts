@@ -13,6 +13,7 @@ export { default as IcFloatingSolve } from './IcFloatingSolve';
 export { default as IcGrayCheck } from './IcGrayCheck';
 export { default as IcHomeTextLogo } from './IcHomeTextLogo';
 export { default as IcKakao } from './IcKakao';
+export { default as IcLeftArrow } from './IcLeftArrow';
 export { default as IcMainAdd } from './IcMainAdd';
 export { default as IcMainChat1 } from './IcMainChat1';
 export { default as IcMainChat2 } from './IcMainChat2';

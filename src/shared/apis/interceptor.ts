@@ -30,6 +30,12 @@ export const onErrorResponse = async (error: AxiosError) => {
     return Promise.reject(error);
   }
 
+  // 서버가 꺼졌거나 네트워크 문제
+  if (!error.response) {
+    window.location.href = '/error';
+    return Promise.reject(error);
+  }
+
   if (error.response?.status === 401 && originRequest.url !== API_URL.REISSUE) {
     // refresh 중이면 큐에 대기
     if (isRefreshing) {
@@ -71,5 +77,6 @@ export const onErrorResponse = async (error: AxiosError) => {
     }
   }
 
+  // 3. 그 외 HTTP 에러 코드 (400, 403, 500 등) 처리
   return Promise.reject(error);
 };

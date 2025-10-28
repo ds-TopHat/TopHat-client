@@ -65,7 +65,6 @@ const SectionTop = () => {
 
   return (
     <div className={styles.sectionTopWrapper}>
-      {/* 전체 wrapper: translateY만 적용 */}
       <motion.div
         style={{
           y: wrapperTranslateY,
@@ -80,17 +79,19 @@ const SectionTop = () => {
         <motion.div
           style={{
             opacity: groupOpacity,
-            maxWidth: '768px',
+            maxWidth: 1180,
             margin: '0 auto',
             display: 'flex',
             justifyContent: 'flex-end',
-            paddingRight: '3rem',
+            paddingRight: '3.6rem',
           }}
         >
           <IcMainGroup
-            width={425.5}
-            height={426}
-            style={{ willChange: 'opacity' }}
+            style={{
+              willChange: 'opacity',
+              width: 'clamp(425.5px, 60vw, 600px)',
+              height: 'auto',
+            }}
           />
         </motion.div>
 
@@ -107,7 +108,9 @@ const SectionTop = () => {
           <IcMainChat1
             width={168}
             height={68}
-            style={{ willChange: 'opacity' }}
+            style={{
+              willChange: 'opacity',
+            }}
           />
         </motion.div>
 
