@@ -40,6 +40,7 @@ const Solve = () => {
   const [s3Key, setS3Key] = useState('');
   const [isPending, setIsPending] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadingSlots, setUploadingSlots] = useState<number[]>([]);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const { mutateAsync: requestSolutionMutate } = usePostAiChat();
@@ -240,7 +241,8 @@ const Solve = () => {
       return;
     }
 
-    // 2. 'me' 로딩(점 3개) UI 시작
+    // 2. 'me' 로딩 UI 시작 및 초기화
+    setUploadingSlots(Array.from({ length: expectedCount }, (_, i) => i));
     setIsUploading(true);
     const uploadedUrls: string[] = [];
 
@@ -250,14 +252,16 @@ const Solve = () => {
         downloadUrls: presignedUrls,
         s3Key: presignedKey,
       } = await getPresignedUrl(expectedCount);
-      const sortedFiles = Array.from(files).sort(
-        (a, b) => a.lastModified - b.lastModified,
-      );
 
+      // lastModified 정렬 로직 제거
+      const filesArray = Array.from(files);
+
+      // S3 업로드 루프: filesArray의 순서를 그대로 사용
+      // filesArray의 순서가 곧 사용자가 선택한 순서
       for (let i = 0; i < expectedCount; i++) {
         const response = await uploadToPresignedUrl(
           uploadUrls[i],
-          sortedFiles[i]!,
+          filesArray[i]!,
         );
         if (!response.ok) {
           throw new Error('S3 업로드 실패');
@@ -265,14 +269,17 @@ const Solve = () => {
         uploadedUrls.push(presignedUrls[i]);
       }
 
-      // 3. 점 3개가 보이는 상태에서 이미지 프리로딩 (브라우저가 다운로드)
+      // 3. S3 업로드 완료 후, 로딩을 끄지 않고 프리로딩 시작
       await preloadImages(uploadedUrls);
 
-      // 4. 프리로딩
+      // 4. 프리로딩 완료 후, 로딩 제거하고 동시에 이미지 추가
+      setUploadingSlots([]);
+      setIsUploading(false);
+
+      // uploadedUrls는 사용자가 선택한 순서대로
       uploadedUrls.forEach((url) => {
         handleImageSelect(url);
       });
-      setIsUploading(false); // 로딩 끄기와 이미지 추가가 동시에 일어남
 
       setS3Key(presignedKey);
       setDownloadUrls(presignedUrls);
@@ -282,7 +289,8 @@ const Solve = () => {
       addServerMessage(
         '이미지 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.',
       );
-      // 실패해도 로딩은 꺼야 함
+      // 실패해도 로딩 상태는 초기화
+      setUploadingSlots([]);
       setIsUploading(false);
     } finally {
       // 6. 모든 작업이 끝나면 input 초기화
@@ -331,17 +339,20 @@ const Solve = () => {
             </div>
           </div>
         )}
-        {isUploading && (
-          <div className={styles.chatBubbleRight}>
-            <div className={styles.chatMyText}>
-              <div className={styles.dots}>
-                <span className={styles.dot} />
-                <span className={styles.dot} />
-                <span className={styles.dot} />
+
+        {isUploading &&
+          uploadingSlots.map((_, index) => (
+            <div key={index} className={styles.chatBubbleRight}>
+              <div className={styles.chatMyText}>
+                <div className={styles.dots}>
+                  <span className={styles.dot} />
+                  <span className={styles.dot} />
+                  <span className={styles.dot} />
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          ))}
+
         <div ref={bottomRef} />
       </div>
 
