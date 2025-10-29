@@ -226,13 +226,15 @@ const Solve = () => {
   };
 
   // 파일 선택 핸들러
-  // 파일 선택 핸들러
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // 1. 파일 선택 즉시 모달 닫기
     setIsOpen(false);
-    const fileList = e.target.files;
 
-    // 파일 개수 검증
-    if (!fileList || fileList.length !== expectedCount) {
+    const files = e.target.files;
+
+    // 2. 파일 개수 검증 로직 수정
+    // 필요한 개수와 다르다면 에러 메시지 표시
+    if (!files || files.length !== expectedCount) {
       addServerMessage(
         expectedCount === 1
           ? '정확한 풀이를 위해 문제 이미지 1장을 선택해주세요.'
@@ -242,11 +244,10 @@ const Solve = () => {
       return;
     }
 
-    // ✅ FileList를 Array로 변환하되, 브라우저가 제공한 순서 그대로 보존
-    const filesArray = Array.from(fileList); // 이 순서가 "사용자가 클릭한 순서"입니다.
-
+    // 3. 'me' 로딩 UI 시작 및 초기화
     setUploadingSlots(Array.from({ length: expectedCount }, (_, i) => i));
     setIsUploading(true);
+    const uploadedUrls: string[] = [];
 
     try {
       const {
@@ -255,33 +256,45 @@ const Solve = () => {
         s3Key: presignedKey,
       } = await getPresignedUrl(expectedCount);
 
-      const finalUploadedUrls: string[] = [];
+      const filesArray = Array.from(files);
 
-      // ✅ 순서대로 업로드 (문제 → 풀이 이미지)
+      // S3 업로드 루프: filesArray의 순서를 그대로 사용
+      // filesArray의 순서가 곧 사용자가 선택한 순서
       for (let i = 0; i < expectedCount; i++) {
-        await uploadToPresignedUrl(uploadUrls[i], filesArray[i]!);
-        finalUploadedUrls.push(presignedUrls[i]);
+        const response = await uploadToPresignedUrl(
+          uploadUrls[i],
+          filesArray[i]!,
+        );
+        if (!response.ok) {
+          throw new Error('S3 업로드 실패');
+        }
+        uploadedUrls.push(presignedUrls[i]);
       }
 
-      // 이미지 프리로딩
-      await preloadImages(finalUploadedUrls);
+      // 4. S3 업로드 완료 후, 로딩을 끄지 않고 프리로딩 시작
+      await preloadImages(uploadedUrls);
 
+      // 5. 프리로딩 완료 후, 로딩 제거하고 동시에 이미지 추가
       setUploadingSlots([]);
       setIsUploading(false);
 
-      // 업로드된 순서대로 채팅에 이미지 표시
-      finalUploadedUrls.forEach((url) => handleImageSelect(url));
+      uploadedUrls.forEach((url) => {
+        handleImageSelect(url);
+      });
 
       setS3Key(presignedKey);
-      setDownloadUrls(finalUploadedUrls);
+      setDownloadUrls(presignedUrls);
       setImageUploaded(true);
     } catch {
+      // 6. 실패 시
       addServerMessage(
-        '이미지 업로드 중 오류가 발생했습니다. 다시 시도해주세요.',
+        '이미지 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.',
       );
+      // 실패해도 로딩 상태는 초기화
       setUploadingSlots([]);
       setIsUploading(false);
     } finally {
+      // 7. 모든 작업이 끝나면 input 초기화
       e.target.value = '';
     }
   };
