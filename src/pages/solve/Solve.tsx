@@ -36,6 +36,14 @@ const Solve = () => {
   const [chatList, setChatList] = useState<Chat[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
+
+  // 순차 업로드를 위한 상태 복구
+  const [presignedUploadUrls, setPresignedUploadUrls] = useState<string[]>([]);
+  const [presignedDownloadUrls, setPresignedDownloadUrls] = useState<string[]>(
+    [],
+  );
+  const [currentUploadStep, setCurrentUploadStep] = useState<0 | 1 | 2>(0); // 0:초기, 1:문제완료/풀이대기, 2:최종완료
+
   const [downloadUrls, setDownloadUrls] = useState<string[]>([]);
   const [s3Key, setS3Key] = useState('');
   const [isPending, setIsPending] = useState(false);
@@ -227,85 +235,130 @@ const Solve = () => {
 
   // 파일 선택 핸들러
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 1. 파일 선택 즉시 모달 닫기
+    // 1. 파일 선택 직후, 모달 상태를 닫음 (브라우저 동작 실패 대비 강제)
     setIsOpen(false);
 
     const files = e.target.files;
 
-    // 2. 파일 개수 검증 로직 수정
-    // 필요한 개수와 다르다면 에러 메시지 표시
-    if (!files || files.length !== expectedCount) {
-      addServerMessage(
-        expectedCount === 1
-          ? '정확한 풀이를 위해 문제 이미지 1장을 선택해주세요.'
-          : '정확한 풀이를 위해 문제 이미지 1장, 풀이 이미지 1장을 선택해주세요.',
-      );
+    // 2. 파일 개수 검증 (순차 모드이므로 항상 1개만 받아야 함)
+    if (!files || files.length !== 1) {
+      const stepName =
+        expectedCount === 1 || currentUploadStep === 0
+          ? '문제 이미지'
+          : '풀이 이미지';
+      addServerMessage(`${stepName} 1장만 선택해주세요.`);
       e.target.value = '';
       return;
     }
 
-    // 3. 'me' 로딩 UI 시작 및 초기화
-    setUploadingSlots(Array.from({ length: expectedCount }, (_, i) => i));
+    const file = files[0];
+    let downloadUrlToUse: string;
+    let uploadUrlToUse: string;
+    let receivedS3Key: string | undefined;
+    let finalDownloadUrls: string[] = [];
+
+    // 3. 'me' 로딩 UI 시작
+    setUploadingSlots([0]);
     setIsUploading(true);
-    const uploadedUrls: string[] = [];
 
     try {
-      const {
-        uploadUrls,
-        downloadUrls: presignedUrls,
-        s3Key: presignedKey,
-      } = await getPresignedUrl(expectedCount);
+      if (expectedCount === 2) {
+        // 2장 모드 (미리 받아둔 URL 사용)
+        const stepIndex = currentUploadStep === 0 ? 0 : 1;
 
-      const filesArray = Array.from(files);
-
-      // S3 업로드 루프: filesArray의 순서를 그대로 사용
-      // filesArray의 순서가 곧 사용자가 선택한 순서
-      for (let i = 0; i < expectedCount; i++) {
-        const response = await uploadToPresignedUrl(
-          uploadUrls[i],
-          filesArray[i]!,
-        );
-        if (!response.ok) {
-          throw new Error('S3 업로드 실패');
+        if (
+          presignedUploadUrls.length < 2 ||
+          presignedDownloadUrls.length < 2
+        ) {
+          throw new Error(
+            'Presigned URLs not initialized correctly for 2 images.',
+          );
         }
-        uploadedUrls.push(presignedUrls[i]);
+
+        uploadUrlToUse = presignedUploadUrls[stepIndex];
+        downloadUrlToUse = presignedDownloadUrls[stepIndex];
+      } else {
+        // 1장 모드: Presigned URL을 지금 요청 (기존 로직 유지)
+        const res = await getPresignedUrl(1);
+        uploadUrlToUse = res.uploadUrls[0];
+        downloadUrlToUse = res.downloadUrls[0];
+        receivedS3Key = res.s3Key;
       }
 
-      // 4. S3 업로드 완료 후, 로딩을 끄지 않고 프리로딩 시작
-      await preloadImages(uploadedUrls);
+      // S3 업로드
+      await uploadToPresignedUrl(uploadUrlToUse, file);
 
-      // 5. 프리로딩 완료 후, 로딩 제거하고 동시에 이미지 추가
+      // 4. S3 업로드 완료 후, 프리로딩 시작
+      await preloadImages([downloadUrlToUse]);
+
+      // 5. 프리로딩 완료 후, 로딩 제거하고 이미지 추가
       setUploadingSlots([]);
       setIsUploading(false);
+      handleImageSelect(downloadUrlToUse);
 
-      uploadedUrls.forEach((url) => {
-        handleImageSelect(url);
-      });
+      // 후속 처리 로직 (핵심 분기)
+      if (expectedCount === 2) {
+        // --- 2장 모드 처리 ---
+        if (currentUploadStep === 0) {
+          // 1단계(문제) 완료: 2단계 업로드를 위해 다음 파일 선택 창 자동 호출
+          finalDownloadUrls = [downloadUrlToUse];
+          setDownloadUrls(finalDownloadUrls); // 문제 이미지 URL만 임시 저장
+          setCurrentUploadStep(1); // 2단계(풀이) 대기 상태
 
-      setS3Key(presignedKey);
-      setDownloadUrls(presignedUrls);
-      setImageUploaded(true);
+          // 쉼없이 다음 단계 파일 선택 창 자동 호출
+          setTimeout(() => {
+            // setTimeout이 User Activation 오류의 원인이지만, UX를 위해 일단 유지
+            if (fileInputRef.current) {
+              fileInputRef.current.multiple = false;
+              fileInputRef.current.click();
+            }
+          }, 300);
+        } else if (currentUploadStep === 1) {
+          // 2단계(풀이) 완료: 최종 URL 결합 및 완료
+          finalDownloadUrls = [...downloadUrls, downloadUrlToUse]; // 문제 + 풀이 URL 결합
+          setDownloadUrls(finalDownloadUrls); // 최종 URL 저장
+          setImageUploaded(true);
+          setCurrentUploadStep(2);
+        }
+      } else {
+        // --- 1장 모드 처리 (expectedCount === 1) ---
+        finalDownloadUrls = [downloadUrlToUse];
+        setDownloadUrls(finalDownloadUrls);
+        setS3Key(receivedS3Key!);
+        setImageUploaded(true);
+        setCurrentUploadStep(2);
+      }
     } catch {
-      // 6. 실패 시
       addServerMessage(
-        '이미지 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.',
+        '이미지 업로드 중 오류가 발생했습니다. 다시 시도해주세요.',
       );
-      // 실패해도 로딩 상태는 초기화
       setUploadingSlots([]);
       setIsUploading(false);
+      // 실패 시 단계 초기화
+      if (expectedCount === 1 || currentUploadStep === 0) {
+        setCurrentUploadStep(0);
+      } else {
+        setCurrentUploadStep(1);
+      }
     } finally {
-      // 7. 모든 작업이 끝나면 input 초기화
       e.target.value = '';
     }
   };
 
   // 모달에서 옵션 선택 시 input 트리거
-  const handleModalSelect = (option: 'one' | 'two') => {
+  const handleModalSelect = async (option: 'one' | 'two') => {
+    // async 유지
+
+    // 무조건 모든 상태 초기화
     setChatList([]);
     solutionStepsRef.current = [];
     setImageUploaded(false);
     setS3Key('');
     setDownloadUrls([]);
+    setPresignedUploadUrls([]);
+    setPresignedDownloadUrls([]);
+    setCurrentUploadStep(0); // 단계 상태도 초기화
+
     setToggleItems([
       '단계별 풀이를 알려줘',
       '전체 풀이를 알려줘',
@@ -315,9 +368,27 @@ const Solve = () => {
     const count = option === 'one' ? 1 : 2;
     setExpectedCount(count);
 
+    if (count === 2) {
+      // 2장 모드: S3 URL 2개와 Key를 미리 요청하여 저장
+      try {
+        const {
+          uploadUrls,
+          downloadUrls,
+          s3Key: receivedS3Key,
+        } = await getPresignedUrl(2);
+        setPresignedUploadUrls(uploadUrls);
+        setPresignedDownloadUrls(downloadUrls);
+        setS3Key(receivedS3Key);
+      } catch {
+        setIsOpen(false);
+        addServerMessage('URL 발급 중 오류가 발생했습니다. 다시 시도해주세요.');
+        return;
+      }
+    }
+
     // input 설정 후 클릭 트리거
     if (fileInputRef.current) {
-      fileInputRef.current.multiple = count > 1;
+      fileInputRef.current.multiple = false; // 항상 1개씩만 선택하게 함
       fileInputRef.current.click();
     }
   };
