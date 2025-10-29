@@ -46,3 +46,11 @@ export const cardContainer = style({
   rowGap: '24px',
   columnGap: '12px',
 });
+
+export const content = style({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  maxWidth: '66.8rem',
+  margin: '0 auto',
+});

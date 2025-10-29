@@ -7,12 +7,17 @@ export const container = style({
   height: '100%',
   background: 'linear-gradient(355deg, #FFF 48.23%, #BFD9FE 97.05%), #FFF',
   backgroundRepeat: 'no-repeat',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
 });
 
 export const title = style({
   display: 'flex',
   flexDirection: 'row',
   paddingLeft: '3.6rem',
+  width: '100%',
+  maxWidth: '66.8rem',
 });
 
 export const name = style({
@@ -37,7 +42,8 @@ export const hello = style({
 export const noteDiv = style({
   padding: '1.2rem 2.6rem 2.6rem',
   borderRadius: '12px',
-  margin: 'auto 0',
+  width: '100%',
+  maxWidth: '66.8rem',
 });
 
 export const noteTitle = style({
@@ -183,7 +189,8 @@ export const buttonContainer = style({
   flexDirection: 'column',
   gap: '1.6rem',
   padding: '3.6rem 3.6rem 10rem',
-  maxWidth: '55rem',
+  maxWidth: '66.8rem',
+  width: '100%',
 });
 
 export const button = style({
