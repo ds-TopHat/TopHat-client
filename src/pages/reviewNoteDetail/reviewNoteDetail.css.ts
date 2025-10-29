@@ -8,6 +8,8 @@ export const mainContainer = style({
   padding: '9.6rem 2.4rem 10rem',
   gap: '1.6rem',
 
+  alignItems: 'center',
+
   backgroundColor: themeVars.color.gray100,
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
@@ -17,6 +19,8 @@ export const topContent = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+  width: '100%',
+  maxWidth: '66.8rem',
 });
 
 export const date = style({
@@ -27,6 +31,10 @@ export const date = style({
 
 export const noteContent = style({
   paddingTop: '1.6rem',
+  width: '100%',
+  maxWidth: '66.8rem',
+  margin: '0 auto',
+
   color: themeVars.color.gray600,
   whiteSpace: 'pre-wrap',
   ...themeVars.font.bodySmall,
@@ -34,5 +42,6 @@ export const noteContent = style({
 
 export const img = style({
   width: '100%',
-  maxWidth: '50rem',
+  maxWidth: '66.8rem',
+  margin: '0 auto',
 });

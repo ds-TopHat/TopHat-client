@@ -108,38 +108,40 @@ const ReviewNotes = () => {
 
   return (
     <div className={styles.reviewContainer}>
-      {toasts.map((msg, i) => (
-        <Toast
-          key={i}
-          message={msg}
-          onClose={() =>
-            setToasts((prev) => prev.filter((_, index) => index !== i))
-          }
-        />
-      ))}
-      <h1 className={styles.title}>오답노트</h1>
-      <button className={styles.pdfButton} onClick={downloadPdf}>
-        <IcExtract width={20} height={20} />
-        오답노트 PDF로 추출하기
-      </button>
-      <p className={styles.pdfComment}>
-        복습하고 싶은 문제를 선택해 풀어보세요!
-      </p>
-
-      <div className={styles.cardContainer}>
-        {data.map((card) => (
-          <ReviewCard
-            key={card.questionId}
-            imageSrc={card.problemImageUrl}
-            text={card.unitType}
-            selected={selectedCards.includes(card.questionId)}
-            onClick={() => toggleSelectCard(card.questionId)}
-            onCardClick={() => handleClick(card.questionId)}
+      <div className={styles.content}>
+        {toasts.map((msg, i) => (
+          <Toast
+            key={i}
+            message={msg}
+            onClose={() =>
+              setToasts((prev) => prev.filter((_, index) => index !== i))
+            }
           />
         ))}
-      </div>
+        <h1 className={styles.title}>오답노트</h1>
+        <button className={styles.pdfButton} onClick={downloadPdf}>
+          <IcExtract width={20} height={20} />
+          오답노트 PDF로 추출하기
+        </button>
+        <p className={styles.pdfComment}>
+          복습하고 싶은 문제를 선택해 풀어보세요!
+        </p>
 
-      <div ref={loaderRef} />
+        <div className={styles.cardContainer}>
+          {data.map((card) => (
+            <ReviewCard
+              key={card.questionId}
+              imageSrc={card.problemImageUrl}
+              text={card.unitType}
+              selected={selectedCards.includes(card.questionId)}
+              onClick={() => toggleSelectCard(card.questionId)}
+              onCardClick={() => handleClick(card.questionId)}
+            />
+          ))}
+        </div>
+
+        <div ref={loaderRef} />
+      </div>
     </div>
   );
 };
