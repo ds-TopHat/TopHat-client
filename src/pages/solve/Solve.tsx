@@ -243,14 +243,11 @@ const Solve = () => {
       return;
     }
 
-    // 3. 'me' 로딩 UI 시작 및 초기화
+    // 3. 'me' 로딩 UI 시작 및 초기화 (expectedCount == 1 또는 2)
     setUploadingSlots(Array.from({ length: expectedCount }, (_, i) => i));
     setIsUploading(true);
-
-    // 정렬 로직을 제거하고, files 배열의 순서를 그대로 사용
     const filesArray = Array.from(files);
-
-    let finalUploadedUrls: string[] = [];
+    const finalUploadedUrls: string[] = [];
 
     try {
       const {
@@ -259,38 +256,30 @@ const Solve = () => {
         s3Key: presignedKey,
       } = await getPresignedUrl(expectedCount);
 
-      // Promise 배열을 filesArray의 순서대로 정의
-      const uploadPromises = [];
+      // [최종 순서 보장 로직] expectedCount가 2일 경우, 파일을 순차적으로 처리
+      if (expectedCount === 2) {
+        // 1) 첫 번째 파일(filesArray[0]) 처리 (문제 이미지로 추정)
+        await uploadToPresignedUrl(uploadUrls[0], filesArray[0]!);
+        finalUploadedUrls.push(presignedUrls[0]);
 
-      // S3 업로드 루프: filesArray의 원래 순서(사용자 선택 순서로 추정)대로 진행
-      for (let i = 0; i < expectedCount; i++) {
-        const fileToUpload = filesArray[i]!; // 원래 순서의 파일
-        const uploadUrl = uploadUrls[i];
-        const downloadUrl = presignedUrls[i]; // 해당 순서의 다운로드 URL
-
-        // Promise는 HTTP 요청만 담고, 결과를 해당 순서의 downloadUrl로 resolve
-        // Promise.all은 입력된 배열 순서대로 결과를 반환하므로, filesArray의 순서가 유지
-        uploadPromises.push(
-          uploadToPresignedUrl(uploadUrl, fileToUpload).then((response) => {
-            if (!response.ok) {
-              throw new Error('S3 업로드 실패');
-            }
-            return downloadUrl; // filesArray[i]에 해당하는 URL 반환
-          }),
-        );
+        // 2) 두 번째 파일(filesArray[1]) 처리 (풀이 이미지로 추정)
+        await uploadToPresignedUrl(uploadUrls[1], filesArray[1]!);
+        finalUploadedUrls.push(presignedUrls[1]);
+      } else {
+        // expectedCount === 1
+        await uploadToPresignedUrl(uploadUrls[0], filesArray[0]!);
+        finalUploadedUrls.push(presignedUrls[0]);
       }
 
-      // Promise.all을 await하여 filesArray의 순서대로 결과 배열을 얻음
-      finalUploadedUrls = await Promise.all(uploadPromises);
-
       // 4. S3 업로드 완료 후, 로딩을 끄지 않고 프리로딩 시작
+      // finalUploadedUrls는 if/else 블록에서 순차적으로 채워짐
       await preloadImages(finalUploadedUrls);
 
       // 5. 프리로딩 완료 후, 로딩 제거하고 동시에 이미지 추가
       setUploadingSlots([]);
       setIsUploading(false);
 
-      // finalUploadedUrls (filesArray 순서)대로 채팅에 추가
+      // finalUploadedUrls (강제 순차 처리 순서)대로 채팅에 추가
       finalUploadedUrls.forEach((url) => {
         handleImageSelect(url);
       });
