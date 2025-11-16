@@ -1,6 +1,9 @@
 # 🎩 MAPI
 > 2025 덕성여자대학교 컴퓨터공학과 졸업프로젝트 **TopHat 팀**의 **프론트엔드 레포지토리**입니다.
 ### 멀티모달 AI 기반 인터랙티브 수학 문제 풀이 서비스
+<img width="1920" height="1200" alt="깃1" src="https://github.com/user-attachments/assets/dcf114cc-a524-4262-8311-640d6f0dab34" />
+
+<img width="1920" height="1298" alt="깃2" src="https://github.com/user-attachments/assets/8e57c65c-6163-42e8-8026-f9586dd2baeb" />
 
 본 프로젝트는 멀티모달 AI를 활용하여 학습자의 손글씨 풀이를 실시간 인식·분석하는 인터랙티브 수학 학습 서비스입니다.  
 문제 이미지를 텍스트로 변환하고, AI가 풀이 과정과 정답을 자동 생성하여 단계별로 안내합니다.
